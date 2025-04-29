@@ -1,4 +1,4 @@
-package com.focus.app.data
+package com.focus.app.data.temp
 
 import android.content.Context
 import androidx.room.Database
@@ -7,26 +7,25 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [BlockedContentEvent::class],
+    entities = [TempEvent::class],
     version = 1,
     exportSchema = false
 )
-@TypeConverters(Converters::class)
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun blockedContentEventDao(): BlockedContentEventDao
+@TypeConverters(TempConverters::class)
+abstract class TempDatabase : RoomDatabase() {
+    abstract fun tempEventDao(): TempEventDao
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE: TempDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase {
+        fun getDatabase(context: Context): TempDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java,
-                    "focus_database"
-                ).fallbackToDestructiveMigration()
-                 .build()
+                    TempDatabase::class.java,
+                    "temp_database"
+                ).build()
                 INSTANCE = instance
                 instance
             }

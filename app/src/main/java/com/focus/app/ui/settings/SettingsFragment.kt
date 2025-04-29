@@ -1,0 +1,31 @@
+package com.focus.app.ui.settings
+
+import android.os.Bundle
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
+import com.focus.app.R
+import com.focus.app.util.AppSettings
+
+class SettingsFragment : PreferenceFragmentCompat() {
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences, rootKey)
+        
+        // Setup preference change listeners if needed
+        setupPreferenceListeners()
+    }
+    
+    private fun setupPreferenceListeners() {
+        // Get the focus mode preference
+        val focusModePref = findPreference<SwitchPreferenceCompat>(AppSettings.KEY_FOCUS_MODE)
+        
+        // Set listener for focus mode changes
+        focusModePref?.setOnPreferenceChangeListener { _, newValue ->
+            // When focus mode changes, we may want to update UI or trigger other actions
+            val focusModeEnabled = newValue as Boolean
+            
+            // Return true to update the preference value
+            true
+        }
+    }
+}

@@ -6,6 +6,7 @@
     <!-- Accessibility Service -->
     <string name="accessibility_service_description">Focus needs accessibility permission to detect and block distracting content like reels, stories, and short videos. No personal data is collected.</string>
     <string name="accessibility_service_label">Focus Blocker</string>
+    <string name="accessibility_permission_description">Focus requires Accessibility permission to detect and block distracting content. No personal data is collected.</string>
     
     <!-- Main Activity -->
     <string name="title_home">Dashboard</string>

@@ -11,10 +11,15 @@ class AppSettings(private val context: Context) {
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
+    fun getPreferences(): SharedPreferences {
+        return prefs
+    }
+
     companion object {
         // App monitoring preferences
         const val KEY_SERVICE_ENABLED = "service_enabled"
         const val KEY_FOCUS_MODE = "focus_mode"
+        const val KEY_SHOW_BLOCK_NOTIFICATIONS = "show_block_notifications"
         
         // Apps to monitor
         const val KEY_APP_INSTAGRAM = "app_instagram"
@@ -103,6 +108,13 @@ class AppSettings(private val context: Context) {
                 prefs.getBoolean(KEY_CONTENT_EXPLORE, true)
             else -> false
         }
+    }
+    
+    /**
+     * Check if notifications should be shown when content is blocked
+     */
+    fun showBlockNotifications(): Boolean {
+        return prefs.getBoolean(KEY_SHOW_BLOCK_NOTIFICATIONS, true)
     }
     
     /**
