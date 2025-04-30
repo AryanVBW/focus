@@ -47,6 +47,9 @@ class AppSettings(private val context: Context) {
         const val CONTENT_TYPE_STORIES = "stories"
         const val CONTENT_TYPE_SHORTS = "shorts"
         const val CONTENT_TYPE_EXPLORE = "explore"
+        
+        const val KEY_BLOCKED_APPS = "blocked_apps_set"
+        const val KEY_BLOCK_ADULT_CONTENT = "block_adult_content"
     }
     
     /**
@@ -127,5 +130,37 @@ class AppSettings(private val context: Context) {
                packageName == PACKAGE_TIKTOK ||
                packageName == PACKAGE_FACEBOOK ||
                packageName == PACKAGE_TWITTER
+    }
+    
+    /**
+     * Get the set of blocked app packages
+     */
+    fun getBlockedApps(): Set<String> {
+        return prefs.getStringSet(KEY_BLOCKED_APPS, emptySet()) ?: emptySet()
+    }
+
+    /**
+     * Set an app as blocked or unblocked
+     */
+    fun setAppBlocked(packageName: String, isBlocked: Boolean) {
+        val currentBlockedApps = getBlockedApps().toMutableSet()
+        if (isBlocked) {
+            currentBlockedApps.add(packageName)
+        } else {
+            currentBlockedApps.remove(packageName)
+        }
+        prefs.edit().putStringSet(KEY_BLOCKED_APPS, currentBlockedApps).apply()
+    }
+
+    // --- Adult Content Blocking --- 
+    fun isAdultContentBlockingEnabled(): Boolean {
+        return prefs.getBoolean(KEY_BLOCK_ADULT_CONTENT, false) // Default to false
+    }
+    
+    /**
+     * Check if a specific app package is in the blocked apps list
+     */
+    fun isAppBlocked(packageName: String): Boolean {
+        return getBlockedApps().contains(packageName)
     }
 }

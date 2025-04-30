@@ -20,7 +20,18 @@
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.focus.app.ui.settings.SettingsFragment"
-        android:label="@string/title_settings" />
+        android:label="@string/title_settings" >
+        <!-- Action to navigate to Blocked Apps Fragment -->
+        <action
+            android:id="@+id/action_settings_to_blocked_apps"
+            app:destination="@id/navigation_blocked_apps" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_blocked_apps"
+        android:name="com.focus.app.ui.settings.BlockedAppsFragment"
+        android:label="@string/setting_blocked_apps" 
+        tools:layout="@layout/fragment_blocked_apps"/>
 
     <fragment
         android:id="@+id/navigation_permission_accessibility"

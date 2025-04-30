@@ -152,7 +152,7 @@ class HomeFragment : Fragment() {
             binding.textBlockedCount.text = count.toString()
         }
         
-        homeViewModel.totalTimeBlocked.observe(viewLifecycleOwner) { timeInMinutes ->
+        homeViewModel.estimatedTimeSavedMinutes.observe(viewLifecycleOwner) { timeInMinutes ->
             binding.textTimeBlocked.text = "$timeInMinutes min"
         }
     }

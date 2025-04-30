@@ -19,8 +19,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _todayBlockedCount = MutableLiveData<Int>()
     val todayBlockedCount: LiveData<Int> = _todayBlockedCount
     
-    private val _totalTimeBlocked = MutableLiveData<Int>()
-    val totalTimeBlocked: LiveData<Int> = _totalTimeBlocked
+    private val _estimatedTimeSavedMinutes = MutableLiveData<Int>()
+    val estimatedTimeSavedMinutes: LiveData<Int> = _estimatedTimeSavedMinutes
 
     init {
         val database = AppDatabase.getInstance(application)
@@ -45,11 +45,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 _todayBlockedCount.postValue(contentCount)
                 
                 // Calculate estimated time saved (assume average of 2 minutes per blocked content)
-                _totalTimeBlocked.postValue(contentCount * 2)
+                _estimatedTimeSavedMinutes.postValue(contentCount * 2)
             } catch (e: Exception) {
                 // Handle exceptions
                 _todayBlockedCount.postValue(0)
-                _totalTimeBlocked.postValue(0)
+                _estimatedTimeSavedMinutes.postValue(0)
             }
         }
     }

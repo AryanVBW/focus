@@ -1,6 +1,8 @@
 package com.focus.app.ui.settings
 
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.focus.app.R
@@ -26,6 +28,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
             
             // Return true to update the preference value
             true
+        }
+
+        // --- Blocked Apps Navigation --- 
+        val blockedAppsPref = findPreference<Preference>(AppSettings.KEY_BLOCKED_APPS)
+        blockedAppsPref?.setOnPreferenceClickListener { 
+            // Navigate to the BlockedAppsFragment using the action defined in navigation graph
+            findNavController().navigate(R.id.action_settings_to_blocked_apps)
+            true // Indicate the click was handled
         }
     }
 }

@@ -21,8 +21,14 @@
     <string name="category_advanced">Advanced Settings</string>
     
     <string name="setting_focus_mode">Focus Mode</string>
-    <string name="setting_focus_mode_desc">Block all distracting content</string>
+    <string name="setting_focus_mode_desc">Block distracting apps and content when enabled</string>
     
+    <string name="setting_blocked_apps">Blocked Apps</string>
+    <string name="setting_blocked_apps_desc">Select which apps to block during focus mode</string>
+
+    <!-- Content Descriptions -->
+    <string name="app_icon_desc">Application Icon</string>
+
     <string name="setting_app_instagram">Instagram</string>
     <string name="setting_app_youtube">YouTube</string>
     <string name="setting_app_snapchat">Snapchat</string>
@@ -34,6 +40,11 @@
     <string name="setting_content_shorts">Shorts</string>
     <string name="setting_content_explore">Explore Pages</string>
     
+    <string name="setting_block_reels_shorts_desc">Always block Instagram Reels and YouTube Shorts, regardless of focus mode</string>
+
+    <string name="setting_block_adult_content">Block Adult Content (Experimental)</string>
+    <string name="setting_block_adult_content_desc">Attempt to block known adult websites in browsers</string>
+
     <!-- Notifications -->
     <string name="notification_channel_name">Focus Service</string>
     <string name="notification_channel_desc">Notifications from Focus blocking service</string>

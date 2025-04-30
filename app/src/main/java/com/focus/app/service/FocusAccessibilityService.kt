@@ -16,9 +16,10 @@ import com.focus.app.data.BlockedContentEventDao
 import com.focus.app.util.AppSettings
 import com.focus.app.util.ContentDetector
 import com.focus.app.util.NotificationHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.net.MalformedURLException
+import java.net.URL
+import com.focus.app.ui.blocker.BlockedPageActivity
 import java.util.Date
 
 /**
@@ -33,6 +34,38 @@ class FocusAccessibilityService : AccessibilityService() {
     private lateinit var notificationHelper: NotificationHelper
     private lateinit var blockedContentEventDao: BlockedContentEventDao
     private val serviceScope = CoroutineScope(Dispatchers.IO)
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.Main + job)
+
+    companion object {
+        private const val TAG = "FocusAccessibilityService"
+        
+        // Supported browsers for adult content filtering
+        private val BROWSER_PACKAGES = setOf(
+            "com.android.chrome", // Google Chrome
+            "org.mozilla.firefox", // Firefox
+            "com.opera.browser", // Opera
+            "com.sec.android.app.sbrowser", // Samsung Internet
+            "com.duckduckgo.mobile.android" // DuckDuckGo
+            // Add other browser packages as needed
+        )
+        
+        // Social media apps with selective blocking
+        private const val INSTAGRAM_PACKAGE = "com.instagram.android"
+        private const val SNAPCHAT_PACKAGE = "com.snapchat.android"
+        
+        // Instagram UI identifiers (these may change with app updates)
+        private val INSTAGRAM_REELS_IDENTIFIERS = setOf(
+            "reels_tray", "reels_viewer", "reels_tab", "clips_tab", 
+            "com.instagram.android:id/clips_tab", "com.instagram.android:id/clips_viewer"
+        )
+        
+        // Snapchat UI identifiers (these may change with app updates)
+        private val SNAPCHAT_STORIES_IDENTIFIERS = setOf(
+            "stories_preview", "story_viewer", "spotlight_tab", 
+            "com.snapchat.android:id/stories_tab", "com.snapchat.android:id/spotlight_tab"
+        )
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -112,75 +145,338 @@ class FocusAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         // Add log at the beginning of the event handler
         Log.d(TAG, "onAccessibilityEvent received: type=${AccessibilityEvent.eventTypeToString(event.eventType)}, pkg=${event.packageName}, class=${event.className}")
+        
+        // Get package name and root node
+        val packageName = event.packageName?.toString() ?: return
+        val rootNode = rootInActiveWindow ?: return
+        
         try {
             // Check if all required components are initialized
             if (!::appSettings.isInitialized || !::contentDetector.isInitialized) {
-                Log.w(TAG, "Skipping accessibility event - service not fully initialized (appSettings: ${::appSettings.isInitialized}, contentDetector: ${::contentDetector.isInitialized})")
+                Log.w(TAG, "Skipping accessibility event - service not fully initialized")
                 return
             }
             
-            // Only process if service is enabled
-            if (!appSettings.isFocusModeEnabled()) {
-                return
+            // --- FOCUS MODE ON: Handle full app blocking ---
+            if (appSettings.isFocusModeEnabled()) {
+                // Block Instagram and Snapchat entirely in focus mode
+                if (packageName == INSTAGRAM_PACKAGE || packageName == SNAPCHAT_PACKAGE) {
+                    Log.i(TAG, "Focus Mode: Completely blocking $packageName")
+                    showSocialAppBlockPage(packageName, true) // true = focus mode
+                    return
+                }
+                
+                // Block other apps set in the blocked apps list
+                if (appSettings.isAppBlocked(packageName)) {
+                    Log.i(TAG, "Blocked app in focus mode: $packageName")
+                    performGlobalAction(GLOBAL_ACTION_HOME)
+                    return
+                }
             }
-
-            // Get package name of the app that generated the event
-            val packageName = event.packageName?.toString() ?: return
-            
-            // Check if this app is configured to be monitored
-            if (!appSettings.isAppMonitored(packageName)) {
-                return
-            }
-
-            // Only process relevant event types to reduce overhead and potential crashes
-            when (event.eventType) {
-                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,
-                AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
-                    // These events are most relevant for content detection
-                    val rootNode = event.source ?: rootInActiveWindow
-                    if (rootNode != null) {
-                        try {
-                            processNode(rootNode, packageName)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error processing node: ${e.message}")
-                        }
+            // --- NORMAL MODE: Selective features blocking for social apps ---
+            else {
+                // Check Instagram for Reels
+                if (packageName == INSTAGRAM_PACKAGE) {
+                    if (isInstagramReelsView(rootNode)) {
+                        Log.i(TAG, "Normal Mode: Blocking Instagram Reels")
+                        showSocialAppBlockPage(packageName, false) // false = normal mode
+                        return
                     }
+                }
+                
+                // Check Snapchat for Stories/Spotlight
+                if (packageName == SNAPCHAT_PACKAGE) {
+                    if (isSnapchatStoriesView(rootNode)) {
+                        Log.i(TAG, "Normal Mode: Blocking Snapchat Stories/Spotlight")
+                        showSocialAppBlockPage(packageName, false) // false = normal mode
+                        return
+                    }
+                }
+            }
+            
+            // --- Content Detection for Adult Content ---
+            // Check if adult content blocking is enabled and this is a browser
+            if (appSettings.isAdultContentBlockingEnabled() && packageName in BROWSER_PACKAGES) {
+                val wasBlocked = checkAndBlockAdultUrl(rootNode, packageName)
+                if (wasBlocked) {
+                    Log.i(TAG, "Adult content blocked in $packageName")
+                    return
+                }
+            }
+            
+            // --- Standard Content Detection with ContentDetector ---
+            if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ||
+                event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+                // Process the accessibility tree to detect distracting content
+                // Note: Since we're simplifying, we'll just check if it's a monitored app
+                if (appSettings.isAppMonitored(packageName)) {
+                    Log.d(TAG, "Processing accessibility tree for $packageName")
+                    processNode(rootNode, packageName)
                 }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error processing accessibility event: ${e.message}")
+        } finally {
+            // Recycle nodes if needed
+            try {
+                rootNode.recycle()
+            } catch (e: Exception) {
+                // Ignore recycling errors
+            }
         }
+    }
+    
+    // Expanded lists for better filtering (still not exhaustive)
+    private val ADULT_KEYWORDS = setOf(
+        "porn", "sex", "xxx", "adult", "hentai", "erotic", "nude", "explicit",
+        "lust", "sensual", "aphrodisiac", "bdsm", "fetish"
+        // Add more general keywords cautiously
+    )
+    private val ADULT_DOMAINS = setOf(
+        "xnxx.com", "xvideos.com", "pornhub.com", "hamster.com", // Common examples
+        "youporn.com", "redtube.com", "tube8.com", "spankbang.com",
+        "chaturbate.com", "livejasmin.com"
+        // Add specific domains (lowercase) - avoid overly broad entries
+    )
+
+    // --- Updated Function Implementation: Check and Block Adult URL ---
+    private fun checkAndBlockAdultUrl(rootNode: AccessibilityNodeInfo, packageName: String): Boolean {
+        var urlText: String? = null
+        var urlHost: String? = null
+        try {
+            // --- Find URL Bar based on Browser Package ---
+            when (packageName) {
+                "com.android.chrome" -> {
+                    val urlBarNodes = rootNode.findAccessibilityNodeInfosByViewId("com.android.chrome:id/url_bar")
+                    if (urlBarNodes != null && urlBarNodes.isNotEmpty()) {
+                        urlText = urlBarNodes[0]?.text?.toString()?.lowercase()
+                        Log.d(TAG, "Chrome URL detected: $urlText")
+                        // Try to parse the URL to get the host
+                        try {
+                            if (!urlText.isNullOrBlank()) {
+                                val url = URL(urlText) // Requires http:// or https:// prefix
+                                urlHost = url.host?.lowercase()
+                                Log.d(TAG, "URL Host: $urlHost")
+                            }
+                        } catch (e: MalformedURLException) {
+                            // Might happen if text is not a full URL (e.g., during typing)
+                            Log.w(TAG, "Could not parse URL text: $urlText - ${e.message}")
+                            // We can still check the raw text against keywords
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing URL: $urlText - ${e.message}")
+                        }
+                    }
+                }
+                // TODO: Add cases for other browsers
+                else -> {
+                    Log.w(TAG, "Adult content check not implemented for browser: $packageName")
+                }
+            }
+
+            // --- Check URL Text and Host against Lists ---
+            if (urlText != null) {
+                // Check keywords in the full URL text
+                for (keyword in ADULT_KEYWORDS) {
+                    if (urlText.contains(keyword)) {
+                        Log.i(TAG, "Adult keyword '$keyword' found in URL text: $urlText. Launching block page.")
+                        val intent = Intent(this, BlockedPageActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        return true // Blocked
+                    }
+                }
+                // Check specific domains in the URL host (if host was parsed)
+                if (urlHost != null) {
+                    for (domain in ADULT_DOMAINS) {
+                        if (urlHost.contains(domain)) { // contains checks subdomains too (e.g., m.xnxx.com)
+                            Log.i(TAG, "Adult domain '$domain' found in URL host: $urlHost. Launching block page.")
+                            val intent = Intent(this, BlockedPageActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            return true // Blocked
+                        }
+                    }
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during adult URL check for $packageName: ${e.message}")
+        } finally {
+            // Recycling logic might be needed here if issues arise
+        }
+
+        return false // Not blocked
+    }
+    
+    /**
+     * Detects if the current Instagram screen is showing Reels content
+     */
+    private fun isInstagramReelsView(rootNode: AccessibilityNodeInfo): Boolean {
+        try {
+            // Method 1: Look for specific content descriptions or text
+            // Instagram often uses content descriptions for accessibility
+            val allNodes = ArrayList<AccessibilityNodeInfo>()
+            findAllNodes(rootNode, allNodes)
+            
+            for (node in allNodes) {
+                val contentDesc = node.contentDescription?.toString()?.lowercase() ?: ""
+                val text = node.text?.toString()?.lowercase() ?: ""
+                
+                // Check for specific content descriptions or text that indicate Reels
+                if (contentDesc.contains("reel") || text.contains("reel") ||
+                    contentDesc.contains("clip") || text.contains("clip")) {
+                    Log.d(TAG, "Found Instagram Reels content: $contentDesc or $text")
+                    return true
+                }
+            }
+            
+            // Method 2: Look for specific view IDs
+            for (idPattern in INSTAGRAM_REELS_IDENTIFIERS) {
+                val nodes = rootNode.findAccessibilityNodeInfosByViewId(idPattern)
+                if (nodes != null && nodes.isNotEmpty()) {
+                    Log.d(TAG, "Found Instagram Reels view by ID: $idPattern")
+                    return true
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking Instagram for Reels: ${e.message}")
+        }
+        
+        return false
+    }
+    
+    /**
+     * Detects if the current Snapchat screen is showing Stories or Spotlight content
+     */
+    private fun isSnapchatStoriesView(rootNode: AccessibilityNodeInfo): Boolean {
+        try {
+            // Method 1: Look for specific content descriptions or text
+            val allNodes = ArrayList<AccessibilityNodeInfo>()
+            findAllNodes(rootNode, allNodes)
+            
+            for (node in allNodes) {
+                val contentDesc = node.contentDescription?.toString()?.lowercase() ?: ""
+                val text = node.text?.toString()?.lowercase() ?: ""
+                
+                // Check for specific content descriptions or text that indicate Stories/Spotlight
+                if (contentDesc.contains("story") || text.contains("story") ||
+                    contentDesc.contains("stories") || text.contains("stories") ||
+                    contentDesc.contains("spotlight") || text.contains("spotlight")) {
+                    Log.d(TAG, "Found Snapchat Stories/Spotlight content: $contentDesc or $text")
+                    return true
+                }
+            }
+            
+            // Method 2: Look for specific view IDs
+            for (idPattern in SNAPCHAT_STORIES_IDENTIFIERS) {
+                val nodes = rootNode.findAccessibilityNodeInfosByViewId(idPattern)
+                if (nodes != null && nodes.isNotEmpty()) {
+                    Log.d(TAG, "Found Snapchat Stories/Spotlight view by ID: $idPattern")
+                    return true
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking Snapchat for Stories/Spotlight: ${e.message}")
+        }
+        
+        return false
+    }
+    
+    /**
+     * Helper method to find all nodes in the accessibility tree
+     */
+    private fun findAllNodes(node: AccessibilityNodeInfo?, resultList: ArrayList<AccessibilityNodeInfo>) {
+        if (node == null) return
+        
+        resultList.add(node)
+        for (i in 0 until node.childCount) {
+            val child = node.getChild(i)
+            if (child != null) {
+                findAllNodes(child, resultList)
+            }
+        }
+    }
+    
+    /**
+     * Shows the social app block page with appropriate messaging
+     */
+    private fun showSocialAppBlockPage(packageName: String, isFocusMode: Boolean) {
+        val intent = Intent(this, BlockedPageActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        
+        // Pass information about what's being blocked to customize the message
+        intent.putExtra("package_name", packageName)
+        intent.putExtra("is_focus_mode", isFocusMode)
+        
+        when (packageName) {
+            INSTAGRAM_PACKAGE -> {
+                intent.putExtra("app_name", "Instagram")
+                if (!isFocusMode) {
+                    intent.putExtra("feature_name", "Reels")
+                }
+            }
+            SNAPCHAT_PACKAGE -> {
+                intent.putExtra("app_name", "Snapchat")
+                if (!isFocusMode) {
+                    intent.putExtra("feature_name", "Stories/Spotlight")
+                }
+            }
+        }
+        
+        startActivity(intent)
+        
+        // Also go to home to immediately hide the blocked content
+        performGlobalAction(GLOBAL_ACTION_HOME)
     }
 
     private fun processNode(rootNode: AccessibilityNodeInfo, packageName: String) {
         try {
-            // Special handling for Instagram reels and YouTube shorts which are difficult to detect
+            // --- Always block Reels/Shorts --- regardless of focus mode status
+            var isReelOrShort = false
             when (packageName) {
                 AppSettings.PACKAGE_INSTAGRAM -> {
-                    // Check for reels/short-form content indicators
                     if (isInstagramReels(rootNode)) {
+                        Log.d(TAG, "Instagram Reels detected. Blocking.")
                         handleDistractingContent(rootNode, packageName, AppSettings.CONTENT_TYPE_REELS)
-                        return
+                        isReelOrShort = true // Mark as handled
                     }
                 }
                 AppSettings.PACKAGE_YOUTUBE -> {
-                    // Check for shorts
                     if (isYouTubeShorts(rootNode)) {
+                        Log.d(TAG, "YouTube Shorts detected. Blocking.")
                         handleDistractingContent(rootNode, packageName, AppSettings.CONTENT_TYPE_SHORTS)
-                        return
+                        isReelOrShort = true // Mark as handled
                     }
                 }
             }
+
+            // If we already handled a reel/short, no need for general detection
+            if (isReelOrShort) {
+                return
+            }
+
+            // --- General Focus Mode Blocking (Content Detection) --- 
+            // Only proceed with general content detection if focus mode is ON.
+            // App-level blocking is handled earlier in onAccessibilityEvent.
+            if (!appSettings.isFocusModeEnabled()) {
+                Log.v(TAG, "Skipping general content detection: FocusModeEnabled=false for $packageName")
+                return // Don't do general content detection if focus mode is off
+            }
             
-            // Use the general content detector for other apps/content
+            Log.d(TAG, "Proceeding with general content detection for $packageName (Focus Mode Active)")
+            // Use the general content detector for other apps/content (only if focus mode is on)
             val result = contentDetector.detectDistractingContent(rootNode, packageName)
             
             if (result.detected) {
                 // Handle distracting content
+                Log.d(TAG, "General distracting content detected: ${result.contentType}")
                 handleDistractingContent(rootNode, packageName, result.contentType)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error processing node: ${e.message}")
+        } finally {
+            // Optional: Consider if explicit recycling is needed, but often handled automatically.
+            // rootNode?.recycle()
         }
     }
     

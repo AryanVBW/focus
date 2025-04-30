@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Required for Android 14+ foreground service type 'specialUse' -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Required on Android 11+ to query all installed packages -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <application
         android:name=".FocusApplication"
@@ -63,6 +65,12 @@
                 android:value="Focus mode requires constant monitoring of running applications to prevent distractions. This monitoring runs as a foreground service to ensure reliability even when the app is not in the foreground." />
         </service>
 
+        <!-- Blocked Content Page Activity -->
+        <activity
+            android:name=".ui.blocker.BlockedPageActivity"
+            android:label="Content Blocked"
+            android:theme="@style/Theme.Focus"
+            android:exported="false" />
     </application>
 
 </manifest>

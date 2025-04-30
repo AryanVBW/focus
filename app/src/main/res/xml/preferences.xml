@@ -27,6 +27,8 @@
         android:title="@string/category_apps"
         app:iconSpaceReserved="false">
 
+        <!-- Remove individual app switches -->
+        <!-- 
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="app_instagram"
@@ -62,6 +64,14 @@
             android:key="app_twitter"
             android:title="@string/setting_app_twitter"
             app:iconSpaceReserved="false" />
+        -->
+        
+        <!-- Add Preference for managing blocked apps -->
+        <Preference
+            android:key="blocked_apps"
+            android:title="@string/setting_blocked_apps"
+            android:summary="@string/setting_blocked_apps_desc"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
@@ -85,6 +95,13 @@
             android:defaultValue="true"
             android:key="content_explore"
             android:title="@string/setting_content_explore"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreferenceCompat
+            android:key="block_adult_content"
+            android:title="@string/setting_block_adult_content"
+            android:summary="@string/setting_block_adult_content_desc"
+            android:defaultValue="false"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
