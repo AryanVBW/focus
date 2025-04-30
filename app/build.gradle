@@ -25,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.focus.app"
+        applicationId "com.aryanvbw.focus"
         minSdk 26
         targetSdk 34
         versionCode 1
