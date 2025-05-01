@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GithubIcon, Store } from 'lucide-react';
+import { GithubIcon } from 'lucide-react';
+import googlePlayIcon from '../assets/google-play-icon.svg';
 
 const HeroSection: React.FC = () => {
   return (
@@ -46,7 +47,7 @@ const HeroSection: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Store className="mr-2 h-5 w-5" />
+                <img src={googlePlayIcon} alt="Google Play" className="mr-2 h-6 w-6" />
                 Download on Play Store
               </motion.a>
               <motion.a

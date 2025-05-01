@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Lock, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { navLinks } from '../data/content';
+import logoImage from '../assets/focus.png';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,9 +63,12 @@ const Navbar: React.FC = () => {
           duration={500}
           className="flex items-center cursor-pointer"
         >
-          <div className="mr-2 p-2 rounded-full bg-primary-600 text-white">
-            <Lock size={20} />
-          </div>
+          <img 
+            src={logoImage} 
+            alt="Focus Logo" 
+            className="mr-3 h-10 w-10 object-contain rounded-full" 
+            style={{ filter: 'drop-shadow(0 0 2px rgba(124, 58, 237, 0.5))' }}
+          />
           <motion.span 
             className="text-xl font-bold"
             style={{ color: textColor }}

@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GithubIcon, Lock, Mail } from 'lucide-react';
+import { GithubIcon, Mail } from 'lucide-react';
 import { Link } from 'react-scroll';
+import logoImage from '../assets/focus.png';
 
 const Footer: React.FC = () => {
   return (
@@ -10,9 +11,12 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
-              <div className="mr-2 p-2 rounded-full bg-primary-600 text-white">
-                <Lock size={20} />
-              </div>
+              <img 
+                src={logoImage} 
+                alt="Focus Logo" 
+                className="mr-3 h-10 w-10 object-contain rounded-full" 
+                style={{ filter: 'drop-shadow(0 0 2px rgba(124, 58, 237, 0.5))' }}
+              />
               <span className="text-xl font-bold">Focus</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
@@ -28,7 +32,7 @@ const Footer: React.FC = () => {
                 <GithubIcon size={20} />
               </a>
               <a 
-                href="mailto:info@focusapp.example" 
+                href="mailto:vivek.aryanvbw@gmail.com" 
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Mail size={20} />
