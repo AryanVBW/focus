@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-sans text-gray-800 overflow-x-hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl xl:text-6xl leading-tight;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl leading-tight;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl leading-tight;
+  }
+  
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+  
+  h5 {
+    @apply text-lg md:text-xl;
+  }
+  
+  p {
+    @apply leading-relaxed;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .button-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full 
+           bg-primary-600 text-white font-medium
+           transition-all duration-200
+           hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50
+           shadow-sm;
+  }
+  
+  .button-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full 
+           bg-white text-primary-600 font-medium
+           border border-primary-200
+           transition-all duration-200
+           hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50
+           shadow-sm;
+  }
+  
+  .section {
+    @apply py-16 md:py-24;
+  }
+  
+  .section-title {
+    @apply text-center mb-12 md:mb-16;
+  }
+  
+  .section-title h2 {
+    @apply mb-4;
+  }
+  
+  .section-title p {
+    @apply text-gray-600 max-w-3xl mx-auto;
+  }
+}
