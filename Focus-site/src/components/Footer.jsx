@@ -2,7 +2,7 @@ import { GithubIcon, Mail } from 'lucide-react';
 import { Link } from 'react-scroll';
 import logoImage from '../assets/focus.png';
 
-const Footer = () => {
+const Footer = ({ navigateTo }) => {
   return (
     <footer className="bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-gray-200 pt-16 pb-8">
       <div className="container-custom">
@@ -68,8 +68,8 @@ const Footer = () => {
               Resources
             </h5>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-white transition-colors">Terms of Service</a></li>
+              <li><a href="#privacy-policy" onClick={(e) => { e.preventDefault(); navigateTo('privacy-policy'); }} className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="#terms-of-service" onClick={(e) => { e.preventDefault(); navigateTo('terms-of-service'); }} className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-white transition-colors">Terms of Service</a></li>
               <li><a href="https://github.com/AryanVBW/focus/releases" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-white transition-colors">GitHub Releases</a></li>
               <li><a href="#" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-white transition-colors">Contact Us</a></li>
             </ul>

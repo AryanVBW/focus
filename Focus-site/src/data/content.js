@@ -4,8 +4,7 @@ export const navLinks = [
     { name: 'Problem', href: 'problem' },
     { name: 'Solution', href: 'solution' },
     { name: 'Features', href: 'features' },
-    { name: 'How It Works', href: 'how-it-works' },
-    { name: 'Privacy', href: 'privacy' },
+    { name: 'App Overview', href: 'app-overview', isExternalPage: true },
     { name: 'Download', href: 'download' },
 ];
 export const problems = [

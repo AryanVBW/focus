@@ -7,7 +7,25 @@ import { navLinks } from '../data/content';
 import logoImage from '../assets/focus.png';
 import { useTheme } from '../context/ThemeContext';
 
-const Navbar = () => {
+const Navbar = ({ navigateTo = () => {} }) => {
+    // Check if we're on the homepage or an external page
+    const [isHomePage, setIsHomePage] = useState(true);
+    
+    useEffect(() => {
+        // Check the URL to determine if we're on the homepage
+        const checkIfHomePage = () => {
+            const hash = window.location.hash.replace('#', '');
+            const externalPages = ['app-overview', 'privacy-policy', 'terms-of-service'];
+            setIsHomePage(!externalPages.includes(hash));
+        };
+        
+        // Initial check
+        checkIfHomePage();
+        
+        // Listen for hash changes
+        window.addEventListener('hashchange', checkIfHomePage);
+        return () => window.removeEventListener('hashchange', checkIfHomePage);
+    }, []);
     const [isOpen, setIsOpen] = useState(false);
     const { scrollYProgress } = useScroll();
     const { theme, toggleTheme } = useTheme();
@@ -87,20 +105,59 @@ const Navbar = () => {
                                 className: "hidden md:flex space-x-8 items-center",
                                 children: [
                                     navLinks.map((link) => (
-                                        _jsx(ScrollLink, {
-                                            to: link.href,
-                                            spy: true,
-                                            smooth: true,
-                                            offset: -80,
-                                            duration: 500,
-                                            className: "cursor-pointer",
-                                            children: _jsx(motion.span, {
-                                                className: "relative inline-block font-medium hover:text-primary-600 transition-colors",
-                                                style: { color: textColor },
-                                                whileHover: { y: -2 },
-                                                children: link.name
-                                            })
-                                        }, link.href)
+                                        link.isExternalPage ? (
+                                            _jsx("a", {
+                                                href: `#${link.href}`,
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    navigateTo(link.href);
+                                                },
+                                                className: "cursor-pointer",
+                                                children: _jsx(motion.span, {
+                                                    className: "relative inline-block font-medium hover:text-primary-600 transition-colors",
+                                                    style: { color: textColor },
+                                                    whileHover: { y: -2 },
+                                                    children: link.name
+                                                })
+                                            }, link.href)
+                                        ) : isHomePage ? (
+                                            _jsx(ScrollLink, {
+                                                to: link.href,
+                                                spy: true,
+                                                smooth: true,
+                                                offset: -80,
+                                                duration: 500,
+                                                className: "cursor-pointer",
+                                                children: _jsx(motion.span, {
+                                                    className: "relative inline-block font-medium hover:text-primary-600 transition-colors",
+                                                    style: { color: textColor },
+                                                    whileHover: { y: -2 },
+                                                    children: link.name
+                                                })
+                                            }, link.href)
+                                        ) : (
+                                            _jsx("a", {
+                                                href: "#",
+                                                onClick: (e) => {
+                                                    e.preventDefault();
+                                                    navigateTo('home');
+                                                    // Add a small delay to allow page transition before scrolling
+                                                    setTimeout(() => {
+                                                        const element = document.getElementById(link.href);
+                                                        if (element) {
+                                                            element.scrollIntoView({ behavior: 'smooth' });
+                                                        }
+                                                    }, 100);
+                                                },
+                                                className: "cursor-pointer",
+                                                children: _jsx(motion.span, {
+                                                    className: "relative inline-block font-medium hover:text-primary-600 transition-colors",
+                                                    style: { color: textColor },
+                                                    whileHover: { y: -2 },
+                                                    children: link.name
+                                                })
+                                            }, link.href)
+                                        )
                                     )),
                                     _jsx(motion.button, {
                                         className: "p-1.5 rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-slate-800/60 hover:shadow-md dark:hover:shadow-purple-900/20 transition-all relative overflow-hidden",
@@ -144,16 +201,47 @@ const Navbar = () => {
                             className: "container-custom py-4 flex flex-col",
                             children: [
                                 navLinks.map((link) => (
-                                    _jsx(ScrollLink, {
-                                        to: link.href,
-                                        spy: true,
-                                        smooth: true,
-                                        offset: -80,
-                                        duration: 500,
-                                        className: "py-3 px-4 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800/70 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer",
-                                        onClick: () => setIsOpen(false),
-                                        children: link.name
-                                    }, link.href)
+                                    link.isExternalPage ? (
+                                        _jsx("a", {
+                                            href: `#${link.href}`,
+                                            className: "py-3 px-4 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800/70 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer",
+                                            onClick: (e) => {
+                                                e.preventDefault();
+                                                setIsOpen(false);
+                                                navigateTo(link.href);
+                                            },
+                                            children: link.name
+                                        }, link.href)
+                                    ) : isHomePage ? (
+                                        _jsx(ScrollLink, {
+                                            to: link.href,
+                                            spy: true,
+                                            smooth: true,
+                                            offset: -80,
+                                            duration: 500,
+                                            className: "py-3 px-4 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800/70 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer",
+                                            onClick: () => setIsOpen(false),
+                                            children: link.name
+                                        }, link.href)
+                                    ) : (
+                                        _jsx("a", {
+                                            href: "#",
+                                            className: "py-3 px-4 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800/70 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer",
+                                            onClick: (e) => {
+                                                e.preventDefault();
+                                                setIsOpen(false);
+                                                navigateTo('home');
+                                                // Add a small delay to allow page transition before scrolling
+                                                setTimeout(() => {
+                                                    const element = document.getElementById(link.href);
+                                                    if (element) {
+                                                        element.scrollIntoView({ behavior: 'smooth' });
+                                                    }
+                                                }, 100);
+                                            },
+                                            children: link.name
+                                        }, link.href)
+                                    )
                                 )),
                                 _jsxs("div", {
                                     className: "mt-2 px-4 py-3 border-t border-gray-100 dark:border-slate-800/70 flex items-center justify-between",
