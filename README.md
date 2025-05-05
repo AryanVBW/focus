@@ -1,7 +1,7 @@
 # Focus
 
 <p align="center">
-  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="120" height="120" alt="Focus Logo"/>
+  <img src="focus.png" width="120" height="120" alt="Focus Logo"/>
 </p>
 
 <h3 align="center">Your time is only yours</h3>
