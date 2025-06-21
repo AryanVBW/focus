@@ -2,15 +2,113 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Performance optimizations -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    
+    <!-- Viewport and responsive meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Basic SEO meta tags -->
     <title>Focus | Regain control of your digital life</title>
+    <meta name="description" content="Focus is an Android app that helps you break free from digital distractions with smart content blocking, app management, and digital wellness tools.">
+    <meta name="keywords" content="focus app, digital wellness, content blocking, app management, productivity, android app, digital detox, screen time control">
+    <meta name="author" content="Focus Team">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="en-US">
+    <link rel="canonical" href="https://focus-app-site.vercel.app">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Focus | Regain control of your digital life">
+    <meta property="og:description" content="Focus is an Android app that helps you break free from digital distractions with smart content blocking, app management, and digital wellness tools.">
+    <meta property="og:image" content="https://focus-app-site.vercel.app/og-image.jpg">
+    <meta property="og:url" content="https://focus-app-site.vercel.app">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Focus App">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Focus | Regain control of your digital life">
+    <meta name="twitter:description" content="Focus is an Android app that helps you break free from digital distractions with smart content blocking, app management, and digital wellness tools.">
+    <meta name="twitter:image" content="https://focus-app-site.vercel.app/og-image.jpg">
+    
+    <!-- App-specific meta tags -->
+    <meta name="application-name" content="Focus">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Focus">
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="msapplication-TileColor" content="#7c3aed">
+    
+    <!-- Security headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <!-- Performance and caching -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/src/main.jsx" as="script">
+    
+    <!-- Structured data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Focus",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Android",
+      "description": "A digital wellness app that helps you regain control of your digital life through smart content blocking and app management.",
+      "author": {
+        "@type": "Organization",
+        "name": "Focus Team"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "downloadUrl": "https://github.com/AryanVBW/focus/releases/download/V1/Focus_V.0.1.0.apk"
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Screen reader only heading for page structure -->
+    <h1 class="sr-only">Focus App - Digital Wellness and Productivity</h1>
+    
+    <!-- Main app container -->
+    <div id="root" role="application" aria-label="Focus App"></div>
+    
+    <!-- No JavaScript fallback -->
+    <noscript>
+      <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h1>Focus App</h1>
+        <p>JavaScript is required to run this application. Please enable JavaScript in your browser settings.</p>
+        <p>You can still download our Android app from GitHub:</p>
+        <a href="https://github.com/AryanVBW/focus/releases" 
+           style="display: inline-block; background: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px;">
+          Download Focus App
+        </a>
+      </div>
+    </noscript>
+    
+    <!-- Main application script -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
