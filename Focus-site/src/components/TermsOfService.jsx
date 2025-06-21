@@ -10,38 +10,38 @@ const TermsOfService = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Terms of Service</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">Terms of Service</h1>
           
           <div className="prose prose-lg max-w-none">
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Last Updated: May 2, 2025
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Introduction</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Introduction</h2>
             <p>
               Welcome to Focus. By accessing or using our application, you agree to be bound by these Terms of Service 
               ("Terms"). Please read these Terms carefully before using Focus.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Acceptance of Terms</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Acceptance of Terms</h2>
             <p>
               By downloading, installing, or using Focus, you agree to these Terms and our Privacy Policy. If you do 
               not agree with any part of these Terms, you may not use our application.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Description of Service</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Description of Service</h2>
             <p>
               Focus is a productivity application designed to help users minimize distractions and stay focused on their 
               tasks. The app monitors application usage locally on your device, manages notifications, and provides tools to improve productivity.
             </p>
             
-            <h3 className="text-xl font-semibold mt-6 mb-3">Current Version (V1)</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-gray-900 dark:text-gray-100">Current Version (V1)</h3>
             <p>
               The current version of Focus operates entirely on your local device. All data, including your usage patterns and focus sessions, 
               is stored locally on your device. No data is transmitted to our servers or third parties.
             </p>
             
-            <h3 className="text-xl font-semibold mt-6 mb-3">Upcoming Features (V2)</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-gray-900 dark:text-gray-100">Upcoming Features (V2)</h3>
             <p>
               In a future update (V2), we plan to introduce an optional analytics dashboard that will enable you to track your digital habits 
               across devices, visualize your progress, and gain deeper insights into your productivity patterns. This feature will require 
@@ -49,7 +49,7 @@ const TermsOfService = () => {
               entirely optional and opt-in. The core functionality of Focus will remain available without requiring any data sharing.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">User Accounts</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">User Accounts</h2>
             <p>
               <strong>Current Version (V1):</strong> The current version of Focus does not require or support user accounts as all data is stored locally on your device.
             </p>
@@ -68,7 +68,7 @@ const TermsOfService = () => {
               Account creation will be entirely optional. The core functionality of Focus will remain available without requiring an account.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">User Conduct</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">User Conduct</h2>
             <p>
               When using Focus, you agree not to:
             </p>
@@ -80,45 +80,45 @@ const TermsOfService = () => {
               <li>Reverse engineer, decompile, or attempt to extract the source code of the application</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Intellectual Property Rights</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Intellectual Property Rights</h2>
             <p>
               The application, including all content, features, and functionality, is owned by Focus and is protected by 
               copyright, trademark, and other intellectual property laws. You may not modify, reproduce, distribute, or 
               create derivative works based on any materials from Focus without our explicit permission.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Third-Party Links and Services</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Third-Party Links and Services</h2>
             <p>
               Our application may contain links to third-party websites or services. We are not responsible for the 
               content or practices of these third parties. Your interactions with these third parties are solely between 
               you and them.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Limitation of Liability</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Limitation of Liability</h2>
             <p>
               To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, special, 
               consequential, or punitive damages resulting from your use or inability to use the application.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Disclaimer of Warranties</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Disclaimer of Warranties</h2>
             <p>
               The application is provided "as is" and "as available" without warranties of any kind, either express or 
               implied. We do not guarantee that the application will always be secure, error-free, or available.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Changes to Terms</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Changes to Terms</h2>
             <p>
               We may modify these Terms at any time by posting the revised terms on our website or within the application. 
               Your continued use of Focus after such changes constitutes your acceptance of the new Terms.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Governing Law</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Governing Law</h2>
             <p>
               These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which 
               we operate, without regard to its conflict of law principles.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Contact Information</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Contact Information</h2>
             <p>
               If you have any questions about these Terms, please contact us at:
             </p>

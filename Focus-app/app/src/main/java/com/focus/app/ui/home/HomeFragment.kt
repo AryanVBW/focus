@@ -9,12 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.aryanvbw.focus.R
-import com.aryanvbw.focus.databinding.FragmentHomeBinding
+import com.aryanvbw.focus.databinding.FragmentHomeEnhancedBinding
 import com.aryanvbw.focus.util.AppSettings
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentHomeEnhancedBinding? = null
     private val binding get() = _binding!!
     
     private lateinit var homeViewModel: HomeViewModel
@@ -26,7 +28,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeEnhancedBinding.inflate(inflater, container, false)
         settings = AppSettings(requireContext())
         
         return binding.root
@@ -40,6 +42,18 @@ class HomeFragment : Fragment() {
     }
     
     private fun setupUI() {
+        // Set up user greeting
+        setupUserGreeting()
+        
+        // Set up quick action buttons
+        setupQuickActions()
+        
+        // Set up stats preview
+        setupStatsPreview()
+        
+        // Update service status
+        updateServiceStatus()
+        
         // Set the initial state of the focus mode switch
         binding.switchFocusMode.isChecked = settings.isFocusModeEnabled()
         
@@ -51,26 +65,70 @@ class HomeFragment : Fragment() {
         
         // Set initial UI state based on current settings
         updateUIState(settings.isFocusModeEnabled())
+    }
+    
+    /**
+     * Set up user greeting based on time of day
+     */
+    private fun setupUserGreeting() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
         
-        // Set up the start/stop button
-        binding.buttonToggleService.setOnClickListener {
-            val isEnabled = !settings.isServiceEnabled()
-            settings.setServiceEnabled(isEnabled)
-            updateServiceButtonState(isEnabled)
+        val greeting = when {
+            hour < 12 -> "Good Morning"
+            hour < 17 -> "Good Afternoon"
+            else -> "Good Evening"
         }
         
-        // Update service button state based on current setting
-        updateServiceButtonState(settings.isServiceEnabled())
+        binding.textGreeting.text = greeting
+        binding.textUserName.text = "Focus User"
         
-        // Set up the Focus Now button - this is our main action button
+        // Update focus streak - this could be calculated from usage data
+        val streakDays = 3 // Placeholder value
+        binding.textFocusStreak.text = "🔥 $streakDays day focus streak!"
+    }
+    
+    /**
+     * Set up quick action buttons
+     */
+    private fun setupQuickActions() {
         binding.buttonFocusNow.setOnClickListener {
             activateFocusMode()
         }
         
-        // Setup user details
-        setupUserProfile()
+        binding.buttonQuickBreak.setOnClickListener {
+            takeBreak()
+        }
+        
+        binding.buttonSchedule.setOnClickListener {
+            // Navigate to settings - this would need to be implemented based on navigation
+            Toast.makeText(requireContext(), "Opening schedule settings...", Toast.LENGTH_SHORT).show()
+        }
     }
     
+    /**
+     * Set up stats preview with current data
+     */
+    private fun setupStatsPreview() {
+        // These will be updated by the ViewModel observer
+        binding.textBlocksCount.text = "0"
+        binding.textFocusTime.text = "0 min"
+        binding.textProductivityScore.text = "0%"
+    }
+    
+    /**
+     * Take a break - temporarily disable focus mode
+     */
+    private fun takeBreak() {
+        settings.getPreferences().edit().putBoolean(AppSettings.KEY_FOCUS_MODE, false).apply()
+        binding.switchFocusMode.isChecked = false
+        updateUIState(false)
+        
+        Toast.makeText(requireContext(), 
+            "Break time! Focus mode temporarily disabled", 
+            Toast.LENGTH_SHORT).show()
+    }
+
     /**
      * Activate Focus Mode to block distracting content
      */
@@ -84,7 +142,6 @@ class HomeFragment : Fragment() {
         // Update UI states
         binding.switchFocusMode.isChecked = true
         updateUIState(true)
-        updateServiceButtonState(true)
         
         // Show success message
         Toast.makeText(requireContext(), 
@@ -92,69 +149,46 @@ class HomeFragment : Fragment() {
             Toast.LENGTH_LONG).show()
     }
     
-    /**
-     * Setup user profile information
-     */
-    private fun setupUserProfile() {
-        // Set user name and status
-        binding.textUserName.text = "Focus User"
-        
-        // Update status based on focus mode
-        updateUserStatus(settings.isFocusModeEnabled())
-    }
-    
-    /**
-     * Update user status based on focus mode
-     */
-    private fun updateUserStatus(focusModeEnabled: Boolean) {
-        if (focusModeEnabled) {
-            binding.textUserStatus.text = "Currently focused and productive"
-        } else {
-            binding.textUserStatus.text = "Ready to focus and be productive"
-        }
-    }
-    
     private fun updateUIState(focusModeEnabled: Boolean) {
         if (focusModeEnabled) {
-            binding.imageFocusMode.setImageResource(R.drawable.ic_shield)
-            binding.textFocusMode.setText(R.string.setting_focus_mode)
-            binding.textFocusModeDesc.setText(R.string.setting_focus_mode_desc)
             binding.buttonFocusNow.text = "FOCUS MODE ACTIVE"
             binding.buttonFocusNow.isEnabled = false
+            binding.textServiceStatus.text = "Focus mode is protecting you from distractions"
         } else {
-            binding.imageFocusMode.setImageResource(R.drawable.ic_shield)
-            binding.textFocusMode.setText(R.string.setting_focus_mode)
-            binding.textFocusModeDesc.setText(R.string.setting_focus_mode_desc)
             binding.buttonFocusNow.text = "FOCUS NOW"
             binding.buttonFocusNow.isEnabled = true
+            binding.textServiceStatus.text = "Ready to focus and be productive"
         }
-        
-        // Also update user status
-        updateUserStatus(focusModeEnabled)
     }
     
-    private fun updateServiceButtonState(isEnabled: Boolean) {
-        if (isEnabled) {
-            binding.buttonToggleService.setText(R.string.action_stop)
-            binding.buttonToggleService.setBackgroundColor(resources.getColor(R.color.error, null))
-            binding.textServiceStatus.text = "Focus is protecting you from distractions"
+    /**
+     * Update service status display
+     */
+    private fun updateServiceStatus() {
+        val isServiceEnabled = settings.isServiceEnabled()
+        if (isServiceEnabled) {
             binding.imageServiceStatus.setImageResource(R.drawable.ic_shield)
+            binding.textServiceStatus.text = "Focus is protecting you from distractions"
         } else {
-            binding.buttonToggleService.setText(R.string.action_start)
-            binding.buttonToggleService.setBackgroundColor(resources.getColor(R.color.primary, null))
-            binding.textServiceStatus.text = "Focus is not running"
             binding.imageServiceStatus.setImageResource(R.drawable.ic_block)
+            binding.textServiceStatus.text = "Focus is not running"
         }
     }
-    
+
     private fun observeViewModel() {
         homeViewModel.todayBlockedCount.observe(viewLifecycleOwner) { count ->
-            binding.textBlockedCount.text = count.toString()
+            binding.textBlocksCount.text = count.toString()
         }
         
         homeViewModel.estimatedTimeSavedMinutes.observe(viewLifecycleOwner) { timeInMinutes ->
-            binding.textTimeBlocked.text = "$timeInMinutes min"
+            val hours = timeInMinutes / 60
+            val minutes = timeInMinutes % 60
+            binding.textFocusTime.text = if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
         }
+        
+        // TODO: Add productivity score calculation to ViewModel
+        // For now, show a placeholder
+        binding.textProductivityScore.text = "85%"
     }
 
     override fun onDestroyView() {

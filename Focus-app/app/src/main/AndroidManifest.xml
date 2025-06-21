@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <!-- Required on Android 11+ to query all installed packages -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <!-- Required for killing background processes -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <application
         android:name=".FocusApplication"
@@ -71,6 +73,19 @@
             android:label="Content Blocked"
             android:theme="@style/Theme.Focus"
             android:exported="false" />
+            
+        <!-- Device Admin Receiver -->
+        <receiver
+            android:name=".receiver.FocusDeviceAdminReceiver"
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
