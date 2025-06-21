@@ -10,28 +10,28 @@ const PrivacyPolicy = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Privacy Policy</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">Privacy Policy</h1>
           
           <div className="prose prose-lg max-w-none">
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Last Updated: May 2, 2025
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Introduction</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Introduction</h2>
             <p>
               Welcome to Focus . We are committed to protecting your privacy and ensuring 
               the security of your personal information. This Privacy Policy explains how we collect, use, disclose, 
               and safeguard your information when you use our Focus application and related services.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Information We Collect</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Information We Collect</h2>
             <p>
               <strong>Focus V1 (Current Version):</strong> We do not collect any personal information in the current version of Focus. 
               All your data, including your usage timeline and settings, is stored entirely locally on your device. 
               We believe in absolute privacy and giving you complete control over your data.
             </p>
             
-            <h3 className="text-xl font-semibold mt-6 mb-3">Future Plans (Focus V2)</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-gray-900 dark:text-gray-100">Future Plans (Focus V2)</h3>
             <p>
               In an upcoming V2 release, we plan to introduce an optional analytics dashboard that will require 
               collecting certain information to provide personalized insights. This future version may collect:
@@ -58,7 +58,7 @@ const PrivacyPolicy = () => {
               <li><strong>Internet Access:</strong> For syncing settings across devices (if applicable)</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">How We Use Your Information</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">How We Use Your Information</h2>
             <p><strong>Current Version (V1):</strong> Since we don't collect any data in the current version, all processing happens locally on your device.</p>
             
             <p className="mt-4"><strong>Future Plans (V2):</strong> In our planned V2 release, if you opt in to data collection, we would use the information for:</p>
@@ -70,7 +70,7 @@ const PrivacyPolicy = () => {
               <li>Communicating important updates about the service</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Data Storage and Security</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Data Storage and Security</h2>
             <p>
               <strong>Current Version (V1):</strong> All data processing and storage happens entirely on your device. 
               No data is transmitted to our servers or to any third parties. Your privacy is completely preserved as 
@@ -82,13 +82,13 @@ const PrivacyPolicy = () => {
               We will never sell your personal information to third parties under any circumstances.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Data Retention</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Data Retention</h2>
             <p>
               We retain your information only for as long as necessary to fulfill the purposes outlined in this privacy policy,
               unless a longer retention period is required by law.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Your Rights</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Your Rights</h2>
             <p>Depending on your location, you may have rights regarding your personal information, including:</p>
             <ul className="list-disc pl-6 mb-4">
               <li>Access to your personal information</li>
@@ -101,19 +101,19 @@ const PrivacyPolicy = () => {
               To exercise these rights, please contact us using the information provided below.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Children's Privacy</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Children's Privacy</h2>
             <p>
               Our services are not intended for children under 13 years of age. We do not knowingly collect personal 
               information from children under 13.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Changes to This Privacy Policy</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Changes to This Privacy Policy</h2>
             <p>
               We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new 
               Privacy Policy on this page and updating the "Last Updated" date.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-4">Contact Us</h2>
+            <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-gray-100">Contact Us</h2>
             <p>
               If you have any questions or concerns about this Privacy Policy, please contact us at:
             </p>

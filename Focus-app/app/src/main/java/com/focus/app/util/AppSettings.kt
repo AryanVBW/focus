@@ -21,6 +21,12 @@ class AppSettings(private val context: Context) {
         const val KEY_FOCUS_MODE = "focus_mode"
         const val KEY_SHOW_BLOCK_NOTIFICATIONS = "show_block_notifications"
         
+        // Blocking action preferences
+        const val KEY_BLOCKING_ACTION = "blocking_action"
+        const val BLOCKING_ACTION_CLOSE_PLAYER = "close_player"
+        const val BLOCKING_ACTION_CLOSE_APP = "close_app"
+        const val BLOCKING_ACTION_LOCK_SCREEN = "lock_screen"
+        
         // Apps to monitor
         const val KEY_APP_INSTAGRAM = "app_instagram"
         const val KEY_APP_YOUTUBE = "app_youtube"
@@ -33,6 +39,7 @@ class AppSettings(private val context: Context) {
         const val KEY_CONTENT_REELS = "content_reels"
         const val KEY_CONTENT_SHORTS = "content_shorts"
         const val KEY_CONTENT_EXPLORE = "content_explore"
+        const val KEY_CONTENT_SPOTLIGHT = "content_spotlight"
         
         // Package names of popular apps
         const val PACKAGE_INSTAGRAM = "com.instagram.android"
@@ -47,6 +54,7 @@ class AppSettings(private val context: Context) {
         const val CONTENT_TYPE_STORIES = "stories"
         const val CONTENT_TYPE_SHORTS = "shorts"
         const val CONTENT_TYPE_EXPLORE = "explore"
+        const val CONTENT_TYPE_SPOTLIGHT = "spotlight"
         
         const val KEY_BLOCKED_APPS = "blocked_apps_set"
         const val KEY_BLOCK_ADULT_CONTENT = "block_adult_content"
@@ -109,6 +117,8 @@ class AppSettings(private val context: Context) {
                 prefs.getBoolean(KEY_CONTENT_SHORTS, true)
             CONTENT_TYPE_EXPLORE -> 
                 prefs.getBoolean(KEY_CONTENT_EXPLORE, true)
+            CONTENT_TYPE_SPOTLIGHT -> 
+                prefs.getBoolean(KEY_CONTENT_SPOTLIGHT, true)
             else -> false
         }
     }
@@ -162,5 +172,19 @@ class AppSettings(private val context: Context) {
      */
     fun isAppBlocked(packageName: String): Boolean {
         return getBlockedApps().contains(packageName)
+    }
+    
+    /**
+     * Get the blocking action preference
+     */
+    fun getBlockingAction(): String {
+        return prefs.getString(KEY_BLOCKING_ACTION, BLOCKING_ACTION_CLOSE_PLAYER) ?: BLOCKING_ACTION_CLOSE_PLAYER
+    }
+    
+    /**
+     * Set the blocking action preference
+     */
+    fun setBlockingAction(action: String) {
+        prefs.edit().putString(KEY_BLOCKING_ACTION, action).apply()
     }
 }

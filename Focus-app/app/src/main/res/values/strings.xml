@@ -66,4 +66,79 @@
     <string name="action_grant_permission">Grant Permission</string>
     <string name="action_continue">Continue</string>
     <string name="action_back">Back</string>
+    
+    <!-- New Settings -->
+    <string name="smart_blocking">Smart Blocking</string>
+    <string name="schedule_focus_mode">Scheduled Focus Sessions</string>
+    <string name="focus_schedule">Focus Schedule</string>
+    <string name="break_reminders">Break Reminders</string>
+    <string name="break_interval">Break Interval</string>
+    <string name="whitelist_mode">Whitelist Mode</string>
+    <string name="usage_analytics">Usage Analytics</string>
+    <string name="export_data">Export Usage Data</string>
+    <string name="reset_settings">Reset All Settings</string>
+    <string name="notification_style">Notification Style</string>
+    
+    <!-- Blocking Actions -->
+    <string name="blocking_action">Blocking Action</string>
+    <string name="blocking_action_close_player">Close Player (Default)</string>
+    <string name="blocking_action_close_app">Close App</string>
+    <string name="blocking_action_lock_screen">Lock Screen</string>
+    
+    <!-- Arrays for ListPreferences -->
+    <string-array name="blocking_intensity_entries">
+        <item>Light - Allow some content through</item>
+        <item>Medium - Balanced blocking</item>
+        <item>Strict - Block aggressively</item>
+        <item>Maximum - Block everything possible</item>
+    </string-array>
+    
+    <string-array name="blocking_intensity_values">
+        <item>light</item>
+        <item>medium</item>
+        <item>strict</item>
+        <item>maximum</item>
+    </string-array>
+    
+    <string-array name="blocking_action_entries">
+        <item>Navigate Back - Return to previous screen (Recommended)</item>
+        <item>Close App - Force stop the blocked app completely</item>
+        <item>Lock Screen - Lock device to break addiction habits</item>
+    </string-array>
+    
+    <string-array name="blocking_action_values">
+        <item>close_player</item>
+        <item>close_app</item>
+        <item>lock_screen</item>
+    </string-array>
+    
+    <string-array name="break_interval_entries">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>45 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+    </string-array>
+    
+    <string-array name="break_interval_values">
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>120</item>
+    </string-array>
+    
+    <string-array name="notification_style_entries">
+        <item>Minimal - Just a toast</item>
+        <item>Standard - Brief notification</item>
+        <item>Detailed - Full information</item>
+        <item>Silent - No notifications</item>
+    </string-array>
+    
+    <string-array name="notification_style_values">
+        <item>minimal</item>
+        <item>standard</item>
+        <item>detailed</item>
+        <item>silent</item>
+    </string-array>
 </resources>

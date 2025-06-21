@@ -16,6 +16,7 @@ import com.aryanvbw.focus.data.BlockedContentEventDao
 import com.aryanvbw.focus.util.AppSettings
 import com.aryanvbw.focus.util.ContentDetector
 import com.aryanvbw.focus.util.NotificationHelper
+import com.aryanvbw.focus.util.BlockingActionHandler
 import kotlinx.coroutines.*
 import java.net.MalformedURLException
 import java.net.URL
@@ -33,9 +34,14 @@ class FocusAccessibilityService : AccessibilityService() {
     private lateinit var contentDetector: ContentDetector
     private lateinit var notificationHelper: NotificationHelper
     private lateinit var blockedContentEventDao: BlockedContentEventDao
+    private lateinit var blockingActionHandler: BlockingActionHandler
     private val serviceScope = CoroutineScope(Dispatchers.IO)
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
+    
+    // Event throttling to prevent rapid-fire blocks
+    private val lastBlockTime = mutableMapOf<String, Long>()
+    private val BLOCK_THROTTLE_MS = 300L // 300ms throttle between blocks for the same package
 
     companion object {
         private const val TAG = "FocusAccessibilityService"
@@ -53,38 +59,65 @@ class FocusAccessibilityService : AccessibilityService() {
         // Social media apps with selective blocking
         private const val INSTAGRAM_PACKAGE = "com.instagram.android"
         private const val SNAPCHAT_PACKAGE = "com.snapchat.android"
+        private const val YOUTUBE_PACKAGE = "com.google.android.youtube"
+        private const val TIKTOK_PACKAGE = "com.zhiliaoapp.musically"
+        
+        // Content-specific blocking strategy constants
+        private const val BLOCK_STRATEGY_REDIRECT = 1 // Redirect to safe section
+        private const val BLOCK_STRATEGY_SHOW_PAGE = 2 // Show blocking page (for focus mode)
+        private const val BLOCK_STRATEGY_BACK = 3 // Use back button (legacy)
         
         // Instagram UI identifiers (these may change with app updates)
         private val INSTAGRAM_REELS_IDENTIFIERS = setOf(
             "reels_tray", "reels_viewer", "reels_tab", "clips_tab", 
-            "com.instagram.android:id/clips_tab", "com.instagram.android:id/clips_viewer"
+            "com.instagram.android:id/clips_tab", "com.instagram.android:id/clips_viewer",
+            "com.instagram.android:id/reels_viewer", "com.instagram.android:id/reels_tray"
+        )
+        
+        // Instagram safe navigation targets
+        private val INSTAGRAM_SAFE_TARGETS = setOf(
+            "com.instagram.android:id/tab_home",
+            "com.instagram.android:id/navigation_home",
+            "com.instagram.android:id/tab_search",
+            "com.instagram.android:id/navigation_search",
+            "com.instagram.android:id/tab_avatar",
+            "com.instagram.android:id/navigation_profile"
         )
         
         // Snapchat UI identifiers (these may change with app updates)
         private val SNAPCHAT_STORIES_IDENTIFIERS = setOf(
             "stories_preview", "story_viewer", "spotlight_tab", 
-            "com.snapchat.android:id/stories_tab", "com.snapchat.android:id/spotlight_tab"
+            "com.snapchat.android:id/stories_tab", "com.snapchat.android:id/spotlight_tab",
+            "com.snapchat.android:id/stories_container", "com.snapchat.android:id/spotlight_container"
+        )
+        
+        // Snapchat safe navigation targets
+        private val SNAPCHAT_SAFE_TARGETS = setOf(
+            "com.snapchat.android:id/chat_tab", // Chat tab
+            "com.snapchat.android:id/camera_tab", // Camera tab
+            "com.snapchat.android:id/tab_bar_camera_option" // Camera option
         )
     }
 
     override fun onCreate() {
         super.onCreate()
+        Log.i(TAG, "FocusAccessibilityService: onCreate() called - Service starting...")
+        
         try {
-            Log.d(TAG, "Service created")
-            initializeComponents()
+            // Initialize core components
+            appSettings = AppSettings(this)
+            contentDetector = ContentDetector(appSettings)
+            notificationHelper = NotificationHelper(this)
+            blockingActionHandler = BlockingActionHandler(this, this)
+            
+            // Initialize database components
+            val database = AppDatabase.getInstance(this)
+            blockedContentEventDao = database.blockedContentEventDao()
+            
+            Log.i(TAG, "FocusAccessibilityService: All components initialized successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Error during service creation: ${e.message}")
-            // Schedule a retry after a short delay to allow system to stabilize
-            Handler(Looper.getMainLooper()).postDelayed({
-                try {
-                    Log.d(TAG, "Retrying service initialization")
-                    initializeComponents()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to initialize service on retry: ${e.message}")
-                    // At this point we can't do much more than notify the user
-                    Toast.makeText(this, "Focus service couldn't start properly. Please try disabling and re-enabling the service.", Toast.LENGTH_LONG).show()
-                }
-            }, 1000) // Wait 1 second before retry
+            Log.e(TAG, "FocusAccessibilityService: Critical error during initialization", e)
+            // Don't crash the service, but log the error for debugging
         }
     }
     
@@ -104,6 +137,11 @@ class FocusAccessibilityService : AccessibilityService() {
             notificationHelper = NotificationHelper(this)
         }
         
+        // Initialize blocking action handler
+        if (!::blockingActionHandler.isInitialized) {
+            blockingActionHandler = BlockingActionHandler(this, this)
+        }
+        
         // Initialize database safely
         if (!::blockedContentEventDao.isInitialized) {
             try {
@@ -120,15 +158,23 @@ class FocusAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        Log.d(TAG, "Service connected")
-        // Add log to check notificationHelper state
-        if (::notificationHelper.isInitialized) {
-            Log.d(TAG, "NotificationHelper is initialized. Showing notification.")
-            notificationHelper.showServiceRunningNotification()
-        } else {
-            Log.w(TAG, "NotificationHelper NOT initialized when trying to show notification.")
-            // Consider initializing it here as a fallback, though it should be done in onCreate
-            // initializeComponents() // Or specifically initialize notificationHelper if possible
+        Log.i(TAG, "FocusAccessibilityService: onServiceConnected() - Service is now active and ready")
+        
+        try {
+            // Verify service configuration
+            val serviceInfo = serviceInfo
+            Log.d(TAG, "Service info - Events: ${serviceInfo?.eventTypes}, Flags: ${serviceInfo?.flags}")
+            
+            // Show a brief notification that the service is active
+            if (::notificationHelper.isInitialized) {
+                notificationHelper.showTemporaryNotification(
+                    "Focus Active",
+                    "Focus is now protecting you from distractions",
+                    false
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error in onServiceConnected", e)
         }
 
         // Start the foreground monitoring service
@@ -143,8 +189,8 @@ class FocusAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        // Add log at the beginning of the event handler
-        Log.d(TAG, "onAccessibilityEvent received: type=${AccessibilityEvent.eventTypeToString(event.eventType)}, pkg=${event.packageName}, class=${event.className}")
+        // Enhanced logging for debugging event frequency and performance
+        Log.d(TAG, "Event: ${AccessibilityEvent.eventTypeToString(event.eventType)}, Pkg: ${event.packageName}, Class: ${event.className}")
         
         // Get package name and root node
         val packageName = event.packageName?.toString() ?: return
@@ -157,29 +203,52 @@ class FocusAccessibilityService : AccessibilityService() {
                 return
             }
             
+            // Event throttling - skip if we recently blocked this package
+            val currentTime = System.currentTimeMillis()
+            val lastBlock = lastBlockTime[packageName] ?: 0L
+            if (currentTime - lastBlock < BLOCK_THROTTLE_MS) {
+                Log.v(TAG, "Throttling event for $packageName (${currentTime - lastBlock}ms ago)")
+                return
+            }
+            
             // --- FOCUS MODE ON: Handle full app blocking ---
             if (appSettings.isFocusModeEnabled()) {
-                // Block Instagram and Snapchat entirely in focus mode
-                if (packageName == INSTAGRAM_PACKAGE || packageName == SNAPCHAT_PACKAGE) {
-                    Log.i(TAG, "Focus Mode: Completely blocking $packageName")
-                    showSocialAppBlockPage(packageName, true) // true = focus mode
+                // In Focus Mode, use the user's selected blocking action for blocked apps
+                if (appSettings.isAppBlocked(packageName)) {
+                    Log.i(TAG, "Focus Mode: Blocking app with user action: $packageName")
+                    blockContentWithAction(packageName, "blocked_app")
                     return
                 }
                 
-                // Block other apps set in the blocked apps list
-                if (appSettings.isAppBlocked(packageName)) {
-                    Log.i(TAG, "Blocked app in focus mode: $packageName")
-                    performGlobalAction(GLOBAL_ACTION_HOME)
+                // For Instagram and Snapchat in Focus Mode, block reels/stories with user action
+                if (packageName == INSTAGRAM_PACKAGE && isInstagramReelsView(rootNode)) {
+                    Log.i(TAG, "Focus Mode: Blocking Instagram Reels with user action")
+                    blockContentWithAction(packageName, AppSettings.CONTENT_TYPE_REELS)
+                    return
+                }
+                
+                if (packageName == SNAPCHAT_PACKAGE && isSnapchatStoriesView(rootNode)) {
+                    Log.i(TAG, "Focus Mode: Blocking Snapchat Stories with user action")
+                    blockContentWithAction(packageName, AppSettings.CONTENT_TYPE_STORIES)
+                    return
+                }
+                
+                if (packageName == YOUTUBE_PACKAGE && isYouTubeShorts(rootNode)) {
+                    Log.i(TAG, "Focus Mode: Blocking YouTube Shorts with user action")
+                    blockContentWithAction(packageName, AppSettings.CONTENT_TYPE_SHORTS)
                     return
                 }
             }
-            // --- NORMAL MODE: Selective features blocking for social apps ---
+            // --- NORMAL MODE: Content-specific blocking for social apps ---
             else {
                 // Check Instagram for Reels
                 if (packageName == INSTAGRAM_PACKAGE) {
                     if (isInstagramReelsView(rootNode)) {
-                        Log.i(TAG, "Normal Mode: Blocking Instagram Reels")
-                        showSocialAppBlockPage(packageName, false) // false = normal mode
+                        Log.i(TAG, "Normal Mode: Detected Instagram Reels - redirecting to safe section")
+                        val blocked = redirectToSafeAppSection(rootNode, packageName, AppSettings.CONTENT_TYPE_REELS)
+                        if (blocked) {
+                            lastBlockTime[packageName] = System.currentTimeMillis()
+                        }
                         return
                     }
                 }
@@ -187,8 +256,23 @@ class FocusAccessibilityService : AccessibilityService() {
                 // Check Snapchat for Stories/Spotlight
                 if (packageName == SNAPCHAT_PACKAGE) {
                     if (isSnapchatStoriesView(rootNode)) {
-                        Log.i(TAG, "Normal Mode: Blocking Snapchat Stories/Spotlight")
-                        showSocialAppBlockPage(packageName, false) // false = normal mode
+                        Log.i(TAG, "Normal Mode: Detected Snapchat Stories/Spotlight - redirecting to safe section")
+                        val blocked = redirectToSafeAppSection(rootNode, packageName, AppSettings.CONTENT_TYPE_STORIES)
+                        if (blocked) {
+                            lastBlockTime[packageName] = System.currentTimeMillis()
+                        }
+                        return
+                    }
+                }
+                
+                // Check YouTube for Shorts
+                if (packageName == YOUTUBE_PACKAGE) {
+                    if (isYouTubeShorts(rootNode)) {
+                        Log.i(TAG, "Normal Mode: Detected YouTube Shorts - redirecting to safe section")
+                        val blocked = blockYouTubeShorts(rootNode) // Already implements redirection
+                        if (blocked) {
+                            lastBlockTime[packageName] = System.currentTimeMillis()
+                        }
                         return
                     }
                 }
@@ -240,6 +324,15 @@ class FocusAccessibilityService : AccessibilityService() {
     )
 
     // --- Updated Function Implementation: Check and Block Adult URL ---
+    /**
+     * Checks and blocks adult content in supported web browsers.
+     * Uses back navigation (GLOBAL_ACTION_BACK) for consistency with social media blocking.
+     * This provides a non-disruptive user experience compared to launching a full-screen activity.
+     * 
+     * @param rootNode The accessibility node representing the current screen
+     * @param packageName The package name of the browser (e.g., "com.android.chrome")
+     * @return True if adult content was detected and blocked, false otherwise
+     */
     private fun checkAndBlockAdultUrl(rootNode: AccessibilityNodeInfo, packageName: String): Boolean {
         var urlText: String? = null
         var urlHost: String? = null
@@ -278,10 +371,13 @@ class FocusAccessibilityService : AccessibilityService() {
                 // Check keywords in the full URL text
                 for (keyword in ADULT_KEYWORDS) {
                     if (urlText.contains(keyword)) {
-                        Log.i(TAG, "Adult keyword '$keyword' found in URL text: $urlText. Launching block page.")
-                        val intent = Intent(this, BlockedPageActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
+                        Log.i(TAG, "Adult keyword '$keyword' found in URL text: $urlText")
+                        
+                        // Use new blocking action system
+                        executeBlockingAction(packageName, "adult_content")
+                        
+                        // Log the blocked event
+                        logBlockedEvent(packageName, "adult_content")
                         return true // Blocked
                     }
                 }
@@ -289,10 +385,13 @@ class FocusAccessibilityService : AccessibilityService() {
                 if (urlHost != null) {
                     for (domain in ADULT_DOMAINS) {
                         if (urlHost.contains(domain)) { // contains checks subdomains too (e.g., m.xnxx.com)
-                            Log.i(TAG, "Adult domain '$domain' found in URL host: $urlHost. Launching block page.")
-                            val intent = Intent(this, BlockedPageActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
+                            Log.i(TAG, "Adult domain '$domain' found in URL host: $urlHost")
+                            
+                            // Use new blocking action system
+                            executeBlockingAction(packageName, "adult_content")
+                            
+                            // Log the blocked event
+                            logBlockedEvent(packageName, "adult_content")
                             return true // Blocked
                         }
                     }
@@ -398,7 +497,10 @@ class FocusAccessibilityService : AccessibilityService() {
     }
     
     /**
-     * Shows the social app block page with appropriate messaging
+     * Shows the social app block page with appropriate messaging.
+     * This is used specifically for Focus Mode when entire apps are being blocked,
+     * which is different from content-specific blocking (like adult content or reels)
+     * that uses back navigation for a less disruptive experience.
      */
     private fun showSocialAppBlockPage(packageName: String, isFocusMode: Boolean) {
         val intent = Intent(this, BlockedPageActivity::class.java)
@@ -425,8 +527,8 @@ class FocusAccessibilityService : AccessibilityService() {
         
         startActivity(intent)
         
-        // Also go to home to immediately hide the blocked content
-        performGlobalAction(GLOBAL_ACTION_HOME)
+        // Note: Removed GLOBAL_ACTION_HOME to prevent closing the entire app
+        // The blocking page will handle navigation when user chooses an option
     }
 
     private fun processNode(rootNode: AccessibilityNodeInfo, packageName: String) {
@@ -437,14 +539,14 @@ class FocusAccessibilityService : AccessibilityService() {
                 AppSettings.PACKAGE_INSTAGRAM -> {
                     if (isInstagramReels(rootNode)) {
                         Log.d(TAG, "Instagram Reels detected. Blocking.")
-                        handleDistractingContent(rootNode, packageName, AppSettings.CONTENT_TYPE_REELS)
+                        blockContentWithAction(packageName, AppSettings.CONTENT_TYPE_REELS)
                         isReelOrShort = true // Mark as handled
                     }
                 }
                 AppSettings.PACKAGE_YOUTUBE -> {
                     if (isYouTubeShorts(rootNode)) {
                         Log.d(TAG, "YouTube Shorts detected. Blocking.")
-                        handleDistractingContent(rootNode, packageName, AppSettings.CONTENT_TYPE_SHORTS)
+                        blockContentWithAction(packageName, AppSettings.CONTENT_TYPE_SHORTS)
                         isReelOrShort = true // Mark as handled
                     }
                 }
@@ -470,7 +572,7 @@ class FocusAccessibilityService : AccessibilityService() {
             if (result.detected) {
                 // Handle distracting content
                 Log.d(TAG, "General distracting content detected: ${result.contentType}")
-                handleDistractingContent(rootNode, packageName, result.contentType)
+                blockContentWithAction(packageName, result.contentType)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error processing node: ${e.message}")
@@ -582,463 +684,97 @@ class FocusAccessibilityService : AccessibilityService() {
         return nodes
     }
 
-    private fun handleDistractingContent(rootNode: AccessibilityNodeInfo?, packageName: String, contentType: String) {
-        if (rootNode == null) {
-            Log.e(TAG, "Cannot handle distracting content: null root node")
-            return
-        }
-        
-        // Ensure app settings are initialized
-        if (!::appSettings.isInitialized) {
-            Log.e(TAG, "Cannot handle distracting content: app settings not initialized")
-            return
-        }
-        
+    /**
+     * Redirect to safe app section (for normal mode - tries to keep user in app but away from distracting content)
+     */
+    private fun redirectToSafeAppSection(rootNode: AccessibilityNodeInfo, packageName: String, contentType: String): Boolean {
         try {
-            // Block the content based on settings
-            if (appSettings.shouldBlockContentType(contentType)) {
-                // More aggressive blocking strategy
-                val blocked = when (packageName) {
-                    AppSettings.PACKAGE_INSTAGRAM -> {
-                        when (contentType) {
-                            AppSettings.CONTENT_TYPE_REELS -> blockInstagramReels(rootNode)
-                            AppSettings.CONTENT_TYPE_STORIES -> true.also { 
-                                try { performGlobalAction(GLOBAL_ACTION_BACK) } catch (e: Exception) { 
-                                    Log.e(TAG, "Error performing back action: ${e.message}") 
-                                }
-                            }
-                            else -> true.also { 
-                                try { performGlobalAction(GLOBAL_ACTION_BACK) } catch (e: Exception) { 
-                                    Log.e(TAG, "Error performing back action: ${e.message}") 
-                                }
-                            }
-                        }
-                    }
-                    AppSettings.PACKAGE_YOUTUBE -> {
-                        when (contentType) {
-                            AppSettings.CONTENT_TYPE_SHORTS -> blockYouTubeShorts(rootNode)
-                            else -> true.also { 
-                                try { performGlobalAction(GLOBAL_ACTION_BACK) } catch (e: Exception) { 
-                                    Log.e(TAG, "Error performing back action: ${e.message}") 
-                                }
-                            }
-                        }
-                    }
-                    else -> {
-                        // Default blocking action for other apps
-                        try { performGlobalAction(GLOBAL_ACTION_BACK) } catch (e: Exception) { 
-                            Log.e(TAG, "Error performing back action: ${e.message}") 
-                        }
-                        true
-                    }
-                }
+            Log.d(TAG, "Attempting to redirect to safe section in $packageName for $contentType")
             
-                if (blocked) {
-                    try {
-                        // Show a toast message immediately for better feedback
-                        Toast.makeText(this, "Blocked distracting $contentType content", Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error showing toast: ${e.message}")
-                        // Continue execution even if toast fails
-                    }
-                    
-                    // Show notification if helper is initialized
-                    if (::notificationHelper.isInitialized) {
-                        try {
-                            notificationHelper.showContentBlockedNotification(packageName, contentType)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error showing notification: ${e.message}")
-                            // Continue execution even if notification fails
-                        }
-                    }
-                    
-                    // Log the event, only if we've successfully initialized the database
-                    try {
-                        logBlockedEvent(packageName, contentType)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error logging blocked event: ${e.message}")
-                        // Continue execution even if logging fails
-                    }
+            when (packageName) {
+                INSTAGRAM_PACKAGE -> {
+                    return redirectInstagram(rootNode, contentType)
+                }
+                SNAPCHAT_PACKAGE -> {
+                    return redirectSnapchat(rootNode, contentType)
+                }
+                YOUTUBE_PACKAGE -> {
+                    return redirectYouTube(rootNode, contentType)
+                }
+                else -> {
+                    Log.w(TAG, "No safe section redirect available for $packageName")
+                    // Fall back to blocking action
+                    executeBlockingAction(packageName, contentType)
+                    return true
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error handling distracting content: ${e.message}")
-            // Try a fallback action if the handling failed
-            try {
-                performGlobalAction(GLOBAL_ACTION_BACK)
-            } catch (e2: Exception) {
-                Log.e(TAG, "Fallback action also failed: ${e2.message}")
-            }
-        }
-    }
-    
-    // Specialized method to block Instagram reels with enhanced strategies
-    private fun blockInstagramReels(rootNode: AccessibilityNodeInfo): Boolean {
-        try {
-            Log.d(TAG, "Attempting to block Instagram reels with enhanced strategies...")
-            
-            // Create a notification to inform the user (but only if setting enabled)
-            if (appSettings.showBlockNotifications()) {
-                notificationHelper.showTemporaryNotification(
-                    "Focus Mode", 
-                    "Distracting content (Instagram Reels) blocked", 
-                    false
-                )
-            }
-
-            // Strategy 1: Close button approach - look for close or exit buttons first
-            val closeBtns = findNodesByViewId(rootNode, "com.instagram.android:id/close_button")
-            closeBtns.addAll(findNodesByViewId(rootNode, "com.instagram.android:id/exit_button"))
-            closeBtns.addAll(findNodesByText(rootNode, "Close", false))
-            closeBtns.addAll(findNodesByText(rootNode, "Exit", false))
-            if (closeBtns.isNotEmpty()) {
-                for (btn in closeBtns) {
-                    if (btn.isClickable) {
-                        btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Clicked close/exit button on Instagram reels")
-                        return true
-                    }
-                }
-            }
-            
-            // Strategy 2: Try to navigate back using native back button
-            val backBtns = findNodesByViewId(rootNode, "com.instagram.android:id/action_bar_button_back")
-            backBtns.addAll(findNodesByText(rootNode, "Back", false))
-            backBtns.addAll(findNodesByViewId(rootNode, "com.instagram.android:id/navigation_bar_item_icon_view"))
-            if (backBtns.isNotEmpty()) {
-                for (btn in backBtns) {
-                    if (btn.isClickable) {
-                        btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Clicked back button on Instagram reels")
-                        return true
-                    }
-                }
-            }
-            
-            // Strategy 3: Tab navigation approach - try to switch to other tabs
-            // First priority: Home tab
-            val homeBtns = findNodesByViewId(rootNode, "com.instagram.android:id/tab_home")
-            homeBtns.addAll(findNodesByViewId(rootNode, "com.instagram.android:id/navigation_home"))
-            homeBtns.addAll(findNodesByText(rootNode, "Home", false))
-            if (homeBtns.isNotEmpty()) {
-                for (btn in homeBtns) {
-                    if (btn.isClickable) {
-                        btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Clicked home button to exit Instagram reels")
-                        return true
-                    }
-                }
-            }
-            
-            // Search tab
-            val searchBtns = findNodesByViewId(rootNode, "com.instagram.android:id/tab_search")
-            searchBtns.addAll(findNodesByViewId(rootNode, "com.instagram.android:id/navigation_search"))
-            searchBtns.addAll(findNodesByText(rootNode, "Search", false))
-            if (searchBtns.isNotEmpty()) {
-                for (btn in searchBtns) {
-                    if (btn.isClickable) {
-                        btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Clicked search button to exit Instagram reels")
-                        return true
-                    }
-                }
-            }
-            
-            // Profile tab
-            val profileBtns = findNodesByViewId(rootNode, "com.instagram.android:id/tab_avatar")
-            profileBtns.addAll(findNodesByViewId(rootNode, "com.instagram.android:id/navigation_profile"))
-            profileBtns.addAll(findNodesByText(rootNode, "Profile", false))
-            if (profileBtns.isNotEmpty()) {
-                for (btn in profileBtns) {
-                    if (btn.isClickable) {
-                        btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Clicked profile button to exit Instagram reels")
-                        return true
-                    }
-                }
-            }
-            
-            // Strategy 4: If we're in a WebView with Reels, try to navigate to main Instagram URL
-            // Find WebView with navigation options
-            val webViews = mutableListOf<AccessibilityNodeInfo>()
-            findNodesByClassName(rootNode, "android.webkit.WebView", webViews)
-            if (webViews.isNotEmpty()) {
-                // Try to find address bar to navigate away
-                for (webView in webViews) {
-                    val addressBars = findNodesByViewId(webView, "com.android.chrome:id/url_bar")
-                    addressBars.addAll(findNodesByViewId(webView, "com.android.browser:id/url"))
-                    
-                    if (addressBars.isNotEmpty()) {
-                        // Try to navigate to Instagram main page
-                        for (addressBar in addressBars) {
-                            if (addressBar.isEditable) {
-                                // Clear current URL
-                                addressBar.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
-                                addressBar.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT)
-                                
-                                // Set new URL
-                                val arguments = Bundle()
-                                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, "https://www.instagram.com/")
-                                addressBar.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
-                                
-                                // Find go/enter button
-                                val goBtns = findNodesByViewId(webView, "com.android.chrome:id/url_action_button")
-                                for (goBtn in goBtns) {
-                                    if (goBtn.isClickable) {
-                                        goBtn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                                        Log.d(TAG, "Navigated away from Instagram reels in WebView")
-                                        return true
-                                    }
-                                }
-                                
-                                // Try keyboard enter as fallback
-                                performGlobalAction(GLOBAL_ACTION_BACK) // Hide keyboard
-                                return true
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Strategy 5: Fallback to global back button
-            performGlobalAction(GLOBAL_ACTION_BACK)
-            Log.d(TAG, "Used global back action to exit Instagram reels")
-            return true
-        } catch (e: Exception) {
-            Log.e(TAG, "Error blocking Instagram reels: ${e.message}")
-            // Fallback to basic blocking
-            performGlobalAction(GLOBAL_ACTION_BACK)
-            return true
+            Log.e(TAG, "Error redirecting to safe section: ${e.message}")
+            return false
         }
     }
     
     /**
-     * Find nodes by class name - helper method for navigation
+     * Block content with user-selected blocking action (for focus mode or when redirection fails)
      */
-    private fun findNodesByClassName(node: AccessibilityNodeInfo?, className: String, results: MutableList<AccessibilityNodeInfo>) {
-        if (node == null) return
-
+    private fun blockContentWithAction(packageName: String, contentType: String): Boolean {
         try {
-            if (node.className?.toString() == className) {
-                results.add(node)
-            }
-
-            // Safely get child count, can throw exceptions if node has been recycled
-            val childCount = try { node.childCount } catch (e: Exception) { 0 }
-
-            for (i in 0 until childCount) {
-                try {
-                    val child = node.getChild(i)
-                    if (child != null) {
-                        findNodesByClassName(child, className, results)
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error accessing child node: ${e.message}")
-                    // Skip this child and continue with others
-                    continue
-                }
-            }
+            Log.d(TAG, "Blocking content with user action for $packageName ($contentType)")
+            executeBlockingAction(packageName, contentType)
+            logBlockedEvent(packageName, contentType)
+            return true
         } catch (e: Exception) {
-            Log.e(TAG, "Error in findNodesByClassName: ${e.message}")
-            // Method failed, but we don't want to crash
-        }
-    }
-    
-    // Specialized method to block YouTube shorts with enhanced strategies
-    private fun blockYouTubeShorts(rootNode: AccessibilityNodeInfo?): Boolean {
-        if (rootNode == null) {
-            Log.e(TAG, "Cannot block YouTube shorts: null root node")
+            Log.e(TAG, "Error blocking content with action: ${e.message}")
             return false
         }
-        
+    }
+
+    /**
+     * Execute blocking action based on user settings
+     */
+    private fun executeBlockingAction(packageName: String, contentType: String) {
         try {
-            Log.d(TAG, "Attempting to block YouTube shorts with enhanced strategies...")
+            val blockingAction = appSettings.getBlockingAction()
+            Log.d(TAG, "Executing blocking action: $blockingAction for $packageName ($contentType)")
             
-            // Create a notification to inform the user (but only if setting enabled)
-            if (::appSettings.isInitialized && appSettings.showBlockNotifications() && 
-                ::notificationHelper.isInitialized) {
+            if (::blockingActionHandler.isInitialized) {
+                blockingActionHandler.executeBlockingAction(packageName, blockingAction)
+            } else {
+                Log.w(TAG, "BlockingActionHandler not initialized, falling back to default action")
+                performGlobalAction(GLOBAL_ACTION_BACK)
+            }
+            
+            // Show appropriate user feedback
+            val actionMessage = when (blockingAction) {
+                AppSettings.BLOCKING_ACTION_CLOSE_PLAYER -> "returned to previous screen"
+                AppSettings.BLOCKING_ACTION_CLOSE_APP -> "closed blocked app"
+                AppSettings.BLOCKING_ACTION_LOCK_SCREEN -> "locked screen"
+                else -> "blocked content"
+            }
+            
+            try {
+                Toast.makeText(this, "Focus: $actionMessage", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error showing toast: ${e.message}")
+            }
+            
+            // Show notification if enabled
+            if (::notificationHelper.isInitialized && appSettings.showBlockNotifications()) {
                 try {
                     notificationHelper.showTemporaryNotification(
-                        "Focus Mode", 
-                        "Distracting content (YouTube Shorts) blocked", 
+                        "Focus: Content Blocked", 
+                        "Blocked $contentType - $actionMessage", 
                         false
                     )
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to show notification: ${e.message}")
-                    // Continue execution, notification failure is not critical
+                    Log.e(TAG, "Error showing notification: ${e.message}")
                 }
             }
             
-            // Strategy 1: Close button approach - look for various close or exit buttons first
-            val closeBtns = findNodesByViewId(rootNode, "com.google.android.youtube:id/close_button")
-            closeBtns.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/player_close_button"))
-            closeBtns.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/player_control_close_button"))
-            closeBtns.addAll(findNodesByText(rootNode, "Close", false))
-            closeBtns.addAll(findNodesByText(rootNode, "Exit", false))
-            closeBtns.addAll(findNodesByViewId(rootNode, "dismiss_button"))
-            if (closeBtns.isNotEmpty()) {
-                for (btn in closeBtns) {
-                    if (btn.isClickable) {
-                        btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Clicked close/exit button on YouTube shorts")
-                        return true
-                    }
-                }
-            }
-            
-            // Strategy 2: Tab navigation approach - try to switch to other tabs
-            // First priority: Home tab
-            val homeTabs = findNodesByViewId(rootNode, "com.google.android.youtube:id/home_button")
-            homeTabs.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/navigation_home"))
-            homeTabs.addAll(findNodesByText(rootNode, "Home", false))
-            if (homeTabs.isNotEmpty()) {
-                for (tab in homeTabs) {
-                    if (tab.isClickable) {
-                        tab.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Switched to Home tab from YouTube shorts")
-                        return true
-                    }
-                }
-            }
-
-            // Subscriptions tab
-            val subsTabs = findNodesByViewId(rootNode, "com.google.android.youtube:id/subscriptions_button")
-            subsTabs.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/navigation_subscriptions"))
-            subsTabs.addAll(findNodesByText(rootNode, "Subscriptions", false))
-            if (subsTabs.isNotEmpty()) {
-                for (tab in subsTabs) {
-                    if (tab.isClickable) {
-                        tab.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Switched to Subscriptions tab from YouTube shorts")
-                        return true
-                    }
-                }
-            }
-            
-            // Library tab
-            val libraryTabs = findNodesByViewId(rootNode, "com.google.android.youtube:id/library_button")
-            libraryTabs.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/navigation_library"))
-            libraryTabs.addAll(findNodesByText(rootNode, "Library", false))
-            if (libraryTabs.isNotEmpty()) {
-                for (tab in libraryTabs) {
-                    if (tab.isClickable) {
-                        tab.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Switched to Library tab from YouTube shorts")
-                        return true
-                    }
-                }
-            }
-            
-            // Strategy 3: Try to click on alternative siblings if we're in the shorts tab
-            val shortsTabs = findNodesByText(rootNode, "Shorts", false)
-            shortsTabs.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/shorts_button"))
-            shortsTabs.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/navigation_shorts"))
-            if (shortsTabs.isNotEmpty()) {
-                // If we're already on shorts tab, try to find something else to click
-                for (tab in shortsTabs) {
-                    // Get parent to find sibling tabs
-                    val parent = tab.parent
-                    if (parent != null) {
-                        for (i in 0 until parent.childCount) {
-                            val child = parent.getChild(i)
-                            if (child != null && child != tab && child.isClickable) {
-                                child.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                                Log.d(TAG, "Clicked alternative tab to exit YouTube shorts")
-                                return true
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Strategy 4: If we're in a WebView with Shorts, try to navigate to main YouTube URL
-            val webViews = mutableListOf<AccessibilityNodeInfo>()
-            findNodesByClassName(rootNode, "android.webkit.WebView", webViews)
-            if (webViews.isNotEmpty()) {
-                // Try to find address bar to navigate away
-                for (webView in webViews) {
-                    val addressBars = findNodesByViewId(webView, "com.android.chrome:id/url_bar")
-                    addressBars.addAll(findNodesByViewId(webView, "com.android.browser:id/url"))
-                    
-                    if (addressBars.isNotEmpty()) {
-                        // Try to navigate to YouTube main page
-                        for (addressBar in addressBars) {
-                            if (addressBar.isEditable) {
-                                // Clear current URL
-                                addressBar.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
-                                addressBar.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT)
-                                
-                                // Set new URL
-                                val arguments = Bundle()
-                                arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, "https://www.youtube.com/")
-                                addressBar.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
-                                
-                                // Find go/enter button
-                                val goBtns = findNodesByViewId(webView, "com.android.chrome:id/url_action_button")
-                                for (goBtn in goBtns) {
-                                    if (goBtn.isClickable) {
-                                        goBtn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                                        Log.d(TAG, "Navigated away from YouTube shorts in WebView")
-                                        return true
-                                    }
-                                }
-                                
-                                // Try keyboard enter as fallback
-                                performGlobalAction(GLOBAL_ACTION_BACK) // Hide keyboard
-                                return true
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Strategy 5: Check for swipe up/down controls (common in YouTube shorts)
-            val videoPlayerViews = findNodesByViewId(rootNode, "com.google.android.youtube:id/player_view")
-            videoPlayerViews.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/shorts_player"))
-            if (videoPlayerViews.isNotEmpty()) {
-                for (playerView in videoPlayerViews) {
-                    if (playerView.isScrollable) {
-                        // Try to scroll to exit the video
-                        // Scroll down first (most shorts will exit this way)
-                        val scrollDownSuccessful = playerView.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
-                        if (scrollDownSuccessful) {
-                            Log.d(TAG, "Scrolled down to exit YouTube shorts")
-                            return true
-                        }
-                        
-                        // Try scrolling up if down didn't work
-                        val scrollUpSuccessful = playerView.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)
-                        if (scrollUpSuccessful) {
-                            Log.d(TAG, "Scrolled up to exit YouTube shorts")
-                            return true
-                        }
-                    }
-                }
-            }
-            
-            // Strategy 6: Try to find and click any navigation buttons
-            val navigationBtns = findNodesByViewId(rootNode, "com.google.android.youtube:id/navigation_bar_item_icon_view")
-            if (navigationBtns.isNotEmpty()) {
-                // Get the first navigation button that isn't shorts
-                for (btn in navigationBtns) {
-                    if (btn.isClickable && 
-                        btn.contentDescription?.toString()?.contains("shorts", ignoreCase = true) != true) {
-                        btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        Log.d(TAG, "Clicked navigation button to exit YouTube shorts")
-                        return true
-                    }
-                }
-            }
-            
-            // Strategy 7: Fallback to global back button
-            performGlobalAction(GLOBAL_ACTION_BACK)
-            Log.d(TAG, "Used global back action to exit YouTube shorts")
-            return true
         } catch (e: Exception) {
-            Log.e(TAG, "Error blocking YouTube shorts: ${e.message}")
-            // Fallback to basic blocking
+            Log.e(TAG, "Error executing blocking action: ${e.message}")
+            // Fallback to default action
             performGlobalAction(GLOBAL_ACTION_BACK)
-            return true
         }
     }
 
@@ -1065,15 +801,337 @@ class FocusAccessibilityService : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        Log.d(TAG, "Service interrupted")
+        Log.w(TAG, "FocusAccessibilityService: onInterrupt() - Service was interrupted")
+        // This is called when the accessibility service is forcibly interrupted
+        // We can try to recover or log the issue for debugging
     }
 
     override fun onDestroy() {
+        Log.i(TAG, "FocusAccessibilityService: onDestroy() - Service shutting down")
         super.onDestroy()
-        Log.d(TAG, "Service destroyed")
+        serviceScope.cancel()
+        job.cancel()
+    }
+    
+    private fun blockYouTubeShorts(rootNode: AccessibilityNodeInfo): Boolean {
+        try {
+            Log.d(TAG, "Attempting to block YouTube Shorts")
+            
+            // Strategy 1: Try intelligent redirection first (like Instagram)
+            val redirected = redirectYouTube(rootNode, AppSettings.CONTENT_TYPE_SHORTS)
+            
+            if (redirected) {
+                Log.i(TAG, "Successfully blocked YouTube Shorts using intelligent redirection")
+                
+                // Show user feedback
+                try {
+                    Toast.makeText(this, "Focus: Redirected from YouTube Shorts", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error showing toast: ${e.message}")
+                }
+                
+                // Show notification if enabled
+                if (::notificationHelper.isInitialized && appSettings.showBlockNotifications()) {
+                    try {
+                        notificationHelper.showTemporaryNotification(
+                            "Focus: Content Blocked", 
+                            "Redirected from Shorts in YouTube", 
+                            false
+                        )
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error showing notification: ${e.message}")
+                    }
+                }
+                
+                // Log the blocked event
+                logBlockedEvent("com.google.android.youtube", AppSettings.CONTENT_TYPE_SHORTS)
+                
+                return true
+            }
+            
+            // Strategy 2: Fallback to simple back action
+            Log.d(TAG, "Intelligent redirection failed, falling back to BACK action")
+            val success = performGlobalAction(GLOBAL_ACTION_BACK)
+            
+            if (success) {
+                Log.i(TAG, "Successfully blocked YouTube Shorts using BACK action")
+                
+                // Show user feedback
+                try {
+                    Toast.makeText(this, "Focus: Blocked YouTube Shorts", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error showing toast: ${e.message}")
+                }
+                
+                // Show notification if enabled
+                if (::notificationHelper.isInitialized && appSettings.showBlockNotifications()) {
+                    try {
+                        notificationHelper.showTemporaryNotification(
+                            "Focus: Content Blocked", 
+                            "Blocked Shorts in YouTube", 
+                            false
+                        )
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error showing notification: ${e.message}")
+                    }
+                }
+                
+                // Log the blocked event
+                logBlockedEvent("com.google.android.youtube", AppSettings.CONTENT_TYPE_SHORTS)
+                
+                return true
+            } else {
+                Log.w(TAG, "BACK action failed for YouTube Shorts")
+                return false
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error blocking YouTube Shorts: ${e.message}")
+            return false
+        }
+    }
+    
+    /**
+     * Redirect Instagram from Reels to safe section (Home/Feed)
+     */
+    private fun redirectInstagram(rootNode: AccessibilityNodeInfo, contentType: String): Boolean {
+        try {
+            Log.d(TAG, "Attempting to redirect from Instagram $contentType")
+            
+            // Strategy 1: Try to click on Home tab
+            val homeBtns = findNodesByViewId(rootNode, "com.instagram.android:id/tab_home")
+            homeBtns.addAll(findNodesByViewId(rootNode, "com.instagram.android:id/navigation_home"))
+            homeBtns.addAll(findNodesByText(rootNode, "Home", false))
+            for (btn in homeBtns) {
+                if (btn.isClickable) {
+                    val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (success) {
+                        Log.d(TAG, "Successfully redirected to Instagram Home")
+                        return true
+                    }
+                }
+            }
+            
+            // Strategy 2: Try to click on Search tab
+            val searchBtns = findNodesByViewId(rootNode, "com.instagram.android:id/tab_search")
+            searchBtns.addAll(findNodesByViewId(rootNode, "com.instagram.android:id/navigation_search"))
+            searchBtns.addAll(findNodesByText(rootNode, "Search", false))
+            for (btn in searchBtns) {
+                if (btn.isClickable) {
+                    val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (success) {
+                        Log.d(TAG, "Successfully redirected to Instagram Search")
+                        return true
+                    }
+                }
+            }
+            
+            // Strategy 3: Try any safe navigation targets
+            for (targetId in INSTAGRAM_SAFE_TARGETS) {
+                val targetButtons = findNodesByViewId(rootNode, targetId)
+                for (btn in targetButtons) {
+                    if (btn.isClickable) {
+                        val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                        if (success) {
+                            Log.d(TAG, "Successfully redirected to Instagram safe section via $targetId")
+                            return true
+                        }
+                    }
+                }
+            }
+            
+            Log.d(TAG, "All Instagram redirection strategies failed")
+            return false
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error redirecting Instagram: ${e.message}")
+            return false
+        }
+    }
+    
+    /**
+     * Redirect Snapchat from Stories/Spotlight to safe section (Chat/Camera)
+     */
+    private fun redirectSnapchat(rootNode: AccessibilityNodeInfo, contentType: String): Boolean {
+        try {
+            Log.d(TAG, "Attempting to redirect from Snapchat $contentType")
+            
+            // Strategy 1: Try to click on Chat tab
+            val chatBtns = findNodesByViewId(rootNode, "com.snapchat.android:id/chat_tab")
+            chatBtns.addAll(findNodesByText(rootNode, "Chat", false))
+            for (btn in chatBtns) {
+                if (btn.isClickable) {
+                    val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (success) {
+                        Log.d(TAG, "Successfully redirected to Snapchat Chat")
+                        return true
+                    }
+                }
+            }
+            
+            // Strategy 2: Try to click on Camera tab
+            val cameraBtns = findNodesByViewId(rootNode, "com.snapchat.android:id/camera_tab")
+            cameraBtns.addAll(findNodesByViewId(rootNode, "com.snapchat.android:id/tab_bar_camera_option"))
+            cameraBtns.addAll(findNodesByText(rootNode, "Camera", false))
+            for (btn in cameraBtns) {
+                if (btn.isClickable) {
+                    val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (success) {
+                        Log.d(TAG, "Successfully redirected to Snapchat Camera")
+                        return true
+                    }
+                }
+            }
+            
+            // Strategy 3: Try any safe navigation targets
+            for (targetId in SNAPCHAT_SAFE_TARGETS) {
+                val targetButtons = findNodesByViewId(rootNode, targetId)
+                for (btn in targetButtons) {
+                    if (btn.isClickable) {
+                        val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                        if (success) {
+                            Log.d(TAG, "Successfully redirected to Snapchat safe section via $targetId")
+                            return true
+                        }
+                    }
+                }
+            }
+            
+            Log.d(TAG, "All Snapchat redirection strategies failed")
+            return false
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error redirecting Snapchat: ${e.message}")
+            return false
+        }
+    }
+
+    private fun redirectYouTube(rootNode: AccessibilityNodeInfo, contentType: String): Boolean {
+        try {
+            Log.d(TAG, "Attempting to redirect from YouTube $contentType")
+            
+            // YouTube UI identifiers (these may change with app updates)
+            val YOUTUBE_SAFE_TARGETS = setOf(
+                "com.google.android.youtube:id/tab_home",
+                "com.google.android.youtube:id/bottom_tab_home",
+                "com.google.android.youtube:id/tab_subscriptions", 
+                "com.google.android.youtube:id/bottom_tab_subscriptions",
+                "com.google.android.youtube:id/tab_explore",
+                "com.google.android.youtube:id/bottom_tab_explore",
+                "com.google.android.youtube:id/tab_library",
+                "com.google.android.youtube:id/bottom_tab_library"
+            )
+            
+            // Strategy 1: Primary navigation - try to click on the Home tab first
+            val homeBtns = findNodesByViewId(rootNode, "com.google.android.youtube:id/tab_home")
+            homeBtns.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/bottom_tab_home"))
+            homeBtns.addAll(findNodesByText(rootNode, "Home", false))
+            for (btn in homeBtns) {
+                if (btn.isClickable) {
+                    val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (success) {
+                        Log.d(TAG, "Successfully redirected to YouTube Home tab")
+                        return true
+                    }
+                }
+            }
+            
+            // Strategy 2: Try Subscriptions tab
+            val subsBtns = findNodesByViewId(rootNode, "com.google.android.youtube:id/tab_subscriptions")
+            subsBtns.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/bottom_tab_subscriptions"))
+            subsBtns.addAll(findNodesByText(rootNode, "Subscriptions", false))
+            for (btn in subsBtns) {
+                if (btn.isClickable) {
+                    val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (success) {
+                        Log.d(TAG, "Successfully redirected to YouTube Subscriptions tab")
+                        return true
+                    }
+                }
+            }
+            
+            // Strategy 3: Try to find and click on any other safe navigation tab
+            for (targetId in YOUTUBE_SAFE_TARGETS) {
+                val targetButtons = findNodesByViewId(rootNode, targetId)
+                for (btn in targetButtons) {
+                    if (btn.isClickable) {
+                        val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                        if (success) {
+                            Log.d(TAG, "Successfully redirected to YouTube safe section via $targetId")
+                            return true
+                        }
+                    }
+                }
+            }
+            
+            // Strategy 4: Look for any navigation buttons by analyzing all clickable nodes
+            val allNodes = ArrayList<AccessibilityNodeInfo>()
+            findAllNodes(rootNode, allNodes)
+            
+            for (node in allNodes) {
+                if (node.isClickable) {
+                    val contentDesc = node.contentDescription?.toString()?.lowercase() ?: ""
+                    val text = node.text?.toString()?.lowercase() ?: ""
+                    
+                    // Skip if it's related to shorts or vertical video content
+                    if (contentDesc.contains("short") || text.contains("short") ||
+                        contentDesc.contains("vertical") || text.contains("vertical")) {
+                        continue
+                    }
+                    
+                    // Check if it might be a safe navigation button
+                    if (contentDesc.contains("home") || text.contains("home") ||
+                        contentDesc.contains("subscription") || text.contains("subscription") ||
+                        contentDesc.contains("explore") || text.contains("explore") ||
+                        contentDesc.contains("library") || text.contains("library") ||
+                        contentDesc.contains("trending") || text.contains("trending")) {
+                        
+                        val success = node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                        if (success) {
+                            Log.d(TAG, "Redirected to YouTube via navigation element: $contentDesc or $text")
+                            return true
+                        }
+                    }
+                }
+            }
+            
+            // Strategy 5: Try to close the current view (look for close buttons)
+            val closeBtns = findNodesByViewId(rootNode, "com.google.android.youtube:id/close_button")
+            closeBtns.addAll(findNodesByViewId(rootNode, "com.google.android.youtube:id/exit_button"))
+            closeBtns.addAll(findNodesByText(rootNode, "Close", false))
+            closeBtns.addAll(findNodesByText(rootNode, "Exit", false))
+            for (btn in closeBtns) {
+                if (btn.isClickable) {
+                    val success = btn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (success) {
+                        Log.d(TAG, "Successfully closed YouTube Shorts via close button")
+                        return true
+                    }
+                }
+            }
+            
+            // Strategy 6: Failed - return false to trigger fallback
+            Log.d(TAG, "All YouTube redirection strategies failed")
+            return false
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error redirecting YouTube: ${e.message}")
+            return false
+        }
+    }
+
+    private fun findNodesByClassName(node: AccessibilityNodeInfo, className: String, result: MutableList<AccessibilityNodeInfo>) {
+        if (node == null) return
         
-        // Stop the foreground service
-        val intent = Intent(this, FocusMonitorService::class.java)
-        stopService(intent)
+        if (node.className?.toString() == className) {
+            result.add(node)
+        }
+        
+        for (i in 0 until node.childCount) {
+            val child = node.getChild(i)
+            if (child != null) {
+                findNodesByClassName(child, className, result)
+            }
+        }
     }
 }
