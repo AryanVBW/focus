@@ -98,7 +98,7 @@ const HeroSection = () => {
                             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium mb-6"
                         >
                             <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                            <span>4.8 Rating • 10K+ Downloads</span>
+                            <span>Early Access • Coming Soon</span>
                         </motion.div>
 
                         {/* Main heading */}
@@ -184,7 +184,7 @@ const HeroSection = () => {
                                         />
                                     ))}
                                 </div>
-                                <span className="text-sm">Join 10K+ users</span>
+                                <span className="text-sm">Be an early adopter</span>
                             </div>
                             <div className="h-4 w-px bg-gray-500" />
                             <div className="flex items-center gap-1">

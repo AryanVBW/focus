@@ -297,7 +297,7 @@ const FeaturesSection = () => {
                             Ready to transform your digital habits?
                         </h3>
                         <p className="text-primary-100 text-lg mb-6 max-w-2xl mx-auto">
-                            Join thousands of users who have already taken control of their screen time and improved their productivity.
+                            Be among the first to take control of your screen time and improve your productivity with our early access release.
                         </p>
                         <motion.button
                             onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
