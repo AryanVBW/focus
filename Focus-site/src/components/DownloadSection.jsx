@@ -62,14 +62,14 @@ const DownloadSection = () => {
     const downloadStats = [
         {
             icon: Users,
-            value: '10K+',
-            label: 'Downloads',
+            value: 'Coming',
+            label: 'Soon',
             color: 'text-blue-400'
         },
         {
             icon: Star,
-            value: '4.8',
-            label: 'Rating',
+            value: 'Early',
+            label: 'Access',
             color: 'text-yellow-400'
         },
         {
@@ -268,7 +268,7 @@ const DownloadSection = () => {
                     </div>
                 </motion.div>
 
-                {/* Testimonial */}
+                {/* Coming Soon Message */}
                 <motion.div 
                     className="bg-primary-800/50 backdrop-blur-sm rounded-xl p-6 max-w-3xl mx-auto mt-12"
                     initial={{ opacity: 0, y: 20 }}
@@ -277,16 +277,16 @@ const DownloadSection = () => {
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
                     <div className="text-center">
-                        <h3 className="text-xl font-medium mb-4">What users are saying</h3>
+                        <h3 className="text-xl font-medium mb-4">Be Among the First Users</h3>
                         <div className="flex justify-center mb-4">
                             {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                                <Star key={i} className="w-5 h-5 text-yellow-400 fill-current opacity-50" />
                             ))}
                         </div>
                         <blockquote className="text-primary-100 italic mb-4">
-                            "Focus has completely transformed my relationship with my phone. I'm more productive and less anxious about social media."
+                            "Focus is currently in early access. Download now to be among our first users and help shape the future of digital wellness."
                         </blockquote>
-                        <cite className="text-primary-300 text-sm">- Sarah K., Beta User</cite>
+                        <cite className="text-primary-300 text-sm">- The Focus Team</cite>
                     </div>
                 </motion.div>
             </div>

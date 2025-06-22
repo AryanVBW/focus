@@ -14,10 +14,10 @@ const ProblemSection = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
 
     const stats = [
-        { value: '96', label: 'Phone checks per day', icon: TrendingUp },
-        { value: '3h', label: 'Average screen time', icon: Clock },
-        { value: '75%', label: 'Feel phone anxiety', icon: AlertTriangle },
-        { value: '40%', label: 'Check before bed', icon: Moon }
+        { value: '~96', label: 'Phone checks per day*', icon: TrendingUp },
+        { value: '3h+', label: 'Average screen time*', icon: Clock },
+        { value: '~75%', label: 'Feel phone anxiety*', icon: AlertTriangle },
+        { value: '~40%', label: 'Check before bed*', icon: Moon }
     ];
 
     return (
@@ -151,26 +151,29 @@ const ProblemSection = () => {
                     </div>
                     
                     <blockquote className="text-xl lg:text-2xl font-medium text-gray-900 dark:text-gray-100 italic mb-4">
-                        "The average person checks their phone 96 times a day — once every 10 minutes."
+                        "Studies suggest the average person checks their phone ~96 times a day — once every 10 minutes."
                     </blockquote>
                     
                     <cite className="text-gray-600 dark:text-gray-400 text-sm lg:text-base">
-                        — Digital Wellness Research, 2023
+                        — Based on Digital Wellness Research, 2023*
                     </cite>
 
                     <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                         <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                            <div className="text-2xl font-bold text-red-600 dark:text-red-400 mb-1">85%</div>
+                            <div className="text-2xl font-bold text-red-600 dark:text-red-400 mb-1">~85%*</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400">Experience FOMO</div>
                         </div>
                         <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">60%</div>
+                            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">~60%*</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400">Feel overwhelmed</div>
                         </div>
                         <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                            <div className="text-2xl font-bold text-red-600 dark:text-red-400 mb-1">45%</div>
+                            <div className="text-2xl font-bold text-red-600 dark:text-red-400 mb-1">~45%*</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400">Sleep disruption</div>
                         </div>
+                    </div>
+                    <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                        *Statistics based on general digital wellness research, not specific to Focus app users
                     </div>
                 </motion.div>
             </div>

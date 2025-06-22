@@ -37,9 +37,9 @@ const Footer = ({ navigateTo }) => {
     };
 
     const stats = [
-        { icon: Download, value: '10K+', label: 'Downloads' },
-        { icon: Star, value: '4.8', label: 'Rating' },
-        { icon: Users, value: '5K+', label: 'Active Users' },
+        { icon: Download, value: 'Coming Soon', label: 'Downloads' },
+        { icon: Star, value: 'Early Access', label: 'Status' },
+        { icon: Users, value: 'Be First', label: 'Users' },
         { icon: Shield, value: '100%', label: 'Secure' }
     ];
 
