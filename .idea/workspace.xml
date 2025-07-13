@@ -5,8 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="567b9fb3-a964-4522-ade3-2b673a1b4a58" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/service/FocusAccessibilityService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/service/FocusAccessibilityService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/data/AppDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/data/AppDatabase.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/data/BlockedContentEventDao.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/data/BlockedContentEventDao.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/ui/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/ui/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/ui/home/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/ui/home/HomeFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/ui/home/HomeViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/ui/home/HomeViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/util/AppSettings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/util/AppSettings.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/util/NotificationHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/java/com/focus/app/util/NotificationHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/res/layout/fragment_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/res/layout/fragment_home.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/res/layout/fragment_home_enhanced.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/res/layout/fragment_home_enhanced.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/res/navigation/mobile_navigation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/res/navigation/mobile_navigation.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/app/src/main/res/values/themes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Focus-app/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Focus-app/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,10 +33,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2wiL1qUV6nCW592u2KjhRAPqyGX" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -39,7 +53,8 @@
     "cidr.known.project.marker": "true",
     "com.codeium.enabled": "true",
     "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true"
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Volumes/DATA_vivek/GITHUB/focus"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
