@@ -5,457 +5,1252 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F8F9FA"
+    android:background="@drawable/dashboard_background"
     tools:context=".ui.home.HomeFragment">
 
 <androidx.constraintlayout.widget.ConstraintLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="24dp">
 
-    <!-- Header Section with User Greeting -->
+    <!-- Premium Header Section with Glass Morphism Effect -->
     <androidx.cardview.widget.CardView
         android:id="@+id/card_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/primary"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="16dp"
+        app:cardBackgroundColor="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:orientation="vertical"
+            android:background="@drawable/glass_morphism_header"
+            android:padding="32dp"
+            android:elevation="8dp">
 
-            <ImageView
-                android:id="@+id/image_user_avatar"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/ic_person"
-                android:background="@drawable/circle_background_white"
-                android:padding="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/primary" />
-
-            <TextView
-                android:id="@+id/text_greeting"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:text="Good morning!"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/image_user_avatar"
-                app:layout_constraintTop_toTopOf="@id/image_user_avatar" />
-
-            <TextView
-                android:id="@+id/text_user_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:text="Ready to focus?"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:alpha="0.9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/image_user_avatar"
-                app:layout_constraintTop_toBottomOf="@id/text_greeting" />
-
-            <TextView
-                android:id="@+id/text_focus_streak"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="🔥 3 day focus streak!"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/image_user_avatar" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Quick Focus Actions -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_quick_actions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="6dp"
-        android:background="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_header">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/text_quick_actions_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Quick Actions"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#2C3E50"
-                app:layout_constraintTop_toTopOf="parent" />
-
+            <!-- Top Row: Enhanced Avatar and Greeting with Weather Info -->
             <LinearLayout
-                android:id="@+id/layout_action_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
-                android:weightSum="3"
-                app:layout_constraintTop_toBottomOf="@id/text_quick_actions_title">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_focus_now"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Focus Now"
-                    android:textAllCaps="false"
-                    android:textSize="14sp"
-                    android:backgroundTint="@color/primary"
-                    app:cornerRadius="16dp"
-                    style="@style/Widget.Material3.Button" />
+                <!-- Enhanced Avatar with Ring Progress -->
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                    
+                    <!-- Progress Ring Background -->
+                    <ProgressBar
+                        android:id="@+id/progress_daily_goal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="@style/CircularProgressBar"
+                        android:progress="75"
+                        android:max="100" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_quick_break"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="Take Break"
-                    android:textAllCaps="false"
-                    android:textSize="14sp"
-                    android:textColor="@color/primary"
-                    app:strokeColor="@color/primary"
-                    app:strokeWidth="2dp"
-                    app:cornerRadius="16dp"
-                    style="@style/Widget.Material3.Button.OutlinedButton" />
+                    <ImageView
+                        android:id="@+id/image_user_avatar"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_person"
+                        android:background="@drawable/premium_avatar_background"
+                        android:padding="16dp"
+                        android:elevation="6dp"
+                        app:tint="@color/primary" />
+                </FrameLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_schedule"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Schedule"
-                    android:textAllCaps="false"
-                    android:textSize="14sp"
-                    android:textColor="@color/primary"
-                    app:strokeColor="@color/primary"
-                    app:strokeWidth="2dp"
-                    app:cornerRadius="16dp"
-                    style="@style/Widget.Material3.Button.OutlinedButton" />
+                    android:orientation="vertical"
+                    android:layout_marginStart="24dp">
+
+                    <TextView
+                        android:id="@+id/text_greeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Good morning!"
+                        android:textColor="@color/text_primary"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"
+                        android:letterSpacing="0.01" />
+
+                    <TextView
+                        android:id="@+id/text_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Ready to focus today?"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/poppins"
+                        android:alpha="0.8" />
+
+                    <!-- Progress Indicator -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Daily Goal:"
+                            android:textColor="@color/text_tertiary"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/poppins" />
+
+                        <TextView
+                            android:id="@+id/text_daily_progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="75%"
+                            android:textColor="@color/success"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/poppins" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Weather/Time Widget Enhanced -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:minWidth="80dp">
+
+                        <TextView
+                            android:id="@+id/text_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="14:32"
+                            android:textColor="@color/primary"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/poppins" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Today"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/poppins" />
+
+                        <!-- Weather Icon -->
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginTop="8dp"
+                            android:src="@drawable/ic_sunny"
+                            app:tint="@color/warning" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Focus Mode Toggle -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_focus_mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="6dp"
-        android:background="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_quick_actions">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="24dp">
-
-            <ImageView
-                android:id="@+id/image_focus_mode"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:src="@drawable/ic_shield"
-                android:background="@drawable/circle_background_primary"
-                android:padding="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/white" />
-
-            <TextView
-                android:id="@+id/text_focus_mode"
-                android:layout_width="0dp"
+            <!-- Premium Mode Toggle with Glassmorphism -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_mode_toggle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/setting_focus_mode"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#2C3E50"
-                app:layout_constraintEnd_toStartOf="@id/switch_focus_mode"
-                app:layout_constraintStart_toEndOf="@id/image_focus_mode"
-                app:layout_constraintTop_toTopOf="@id/image_focus_mode" />
+                app:cardCornerRadius="24dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white">
 
-            <TextView
-                android:id="@+id/text_focus_mode_desc"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/setting_focus_mode_desc"
-                android:textSize="14sp"
-                android:textColor="#7F8C8D"
-                app:layout_constraintEnd_toStartOf="@id/switch_focus_mode"
-                app:layout_constraintStart_toEndOf="@id/image_focus_mode"
-                app:layout_constraintTop_toBottomOf="@id/text_focus_mode" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:gravity="center">
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switch_focus_mode"
+                    <!-- Normal Mode Pill -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/pill_normal_mode"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/success"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_analytics"
+                                android:layout_marginEnd="8dp"
+                                app:tint="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/text_normal_mode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Monitor"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/poppins" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Enhanced Toggle Switch -->
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="12dp">
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switch_focus_mode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleX="1.2"
+                            android:scaleY="1.2"
+                            app:thumbTint="@color/primary"
+                            app:trackTint="@color/primary_light"
+                            app:trackTintMode="src_atop" />
+
+                    </FrameLayout>
+
+                    <!-- Focus Mode Pill -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/pill_focus_mode"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/warning"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_shield"
+                                android:layout_marginEnd="8dp"
+                                app:tint="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/text_focus_mode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Focus"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/poppins" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Enhanced Focus Streak Badge -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:thumbTint="@color/primary"
-                app:trackTint="@color/primary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/image_focus_mode"
-                app:layout_constraintBottom_toBottomOf="@id/text_focus_mode_desc" />
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/success">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="12dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔥"
+                        android:textSize="20sp"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:id="@+id/text_focus_streak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3 day focus streak!"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
-    <!-- Today's Stats Preview -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_stats_preview"
+    <!-- Premium Stats Cards Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_stats_cards"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="6dp"
-        android:background="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/card_header"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_focus_mode">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/text_stats_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Today's Progress"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#2C3E50"
-                app:layout_constraintTop_toTopOf="parent" />
+        <!-- Today's Focus Time Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_focus_time"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_marginEnd="12dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/card_blocked_count"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/layout_stats"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/stats_card_gradient_success"
+                android:padding="24dp"
+                android:gravity="center">
+
+                <!-- Icon with Background -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_timer"
+                        app:tint="@color/success" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/text_focus_time_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="2h 45m"
+                    android:textColor="@android:color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Focus Time"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/poppins"
+                    android:alpha="0.9"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Blocked Count Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_blocked_count"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_marginStart="12dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@id/card_focus_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/stats_card_gradient_warning"
+                android:padding="24dp"
+                android:gravity="center">
+
+                <!-- Icon with Background -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_shield"
+                        app:tint="@color/warning" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/text_blocked_count_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="127"
+                    android:textColor="@android:color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Blocked Today"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/poppins"
+                    android:alpha="0.9"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Productivity Score Card (Full Width) -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_productivity_score"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@id/card_focus_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:weightSum="3"
-                app:layout_constraintTop_toBottomOf="@id/text_stats_title">
+                android:background="@drawable/stats_card_gradient_primary"
+                android:padding="24dp"
+                android:gravity="center_vertical">
 
+                <!-- Left Side: Icon and Text -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:background="@drawable/stats_background_primary">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/text_blocks_count"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="4dp"
+                            app:cardBackgroundColor="@android:color/white">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_target"
+                                app:tint="@color/primary" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Productivity Score"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/poppins" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Blocks"
-                        android:textSize="12sp"
+                        android:layout_marginTop="8dp"
+                        android:text="Based on your daily habits"
                         android:textColor="@android:color/white"
-                        android:alpha="0.9" />
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins"
+                        android:alpha="0.8" />
 
                 </LinearLayout>
 
+                <!-- Right Side: Score Display -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="16dp"
-                    android:background="@drawable/stats_background_secondary">
-
-                    <TextView
-                        android:id="@+id/text_focus_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2h 15m"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Focus Time"
-                        android:textSize="12sp"
-                        android:textColor="@android:color/white"
-                        android:alpha="0.9" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:background="@drawable/stats_background_accent">
+                    android:gravity="center">
 
                     <TextView
                         android:id="@+id/text_productivity_score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="85%"
-                        android:textSize="28sp"
+                        android:text="85"
+                        android:textColor="@android:color/white"
+                        android:textSize="36sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/white" />
+                        android:fontFamily="@font/poppins" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Productivity"
-                        android:textSize="12sp"
+                        android:text="Great!"
                         android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/poppins"
                         android:alpha="0.9" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_view_stats"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="20dp"
-                android:text="View Detailed Stats"
-                android:textAllCaps="false"
-                android:textColor="@color/primary"
-                app:strokeColor="@color/primary"
-                app:strokeWidth="2dp"
-                app:cornerRadius="16dp"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                app:layout_constraintTop_toBottomOf="@id/layout_stats" />
+        </androidx.cardview.widget.CardView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Service Status -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_service_status"
+    <!-- Quick Actions Section -->
+    <TextView
+        android:id="@+id/text_quick_actions_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Quick Actions"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_stats_cards" />
+
+    <!-- Quick Actions Horizontal ScrollView -->
+    <HorizontalScrollView
+        android:id="@+id/scroll_quick_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="24dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="6dp"
-        android:background="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingStart="0dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/text_quick_actions_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_stats_preview"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Focus Now Action -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_focus_now"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/quick_action_gradient_focus"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_focus"
+                        android:layout_marginBottom="12dp"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Focus Now"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Start session"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins"
+                        android:alpha="0.8"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Take Break Action -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_take_break"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/quick_action_gradient_break"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_coffee"
+                        android:layout_marginBottom="12dp"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Take Break"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="5 min break"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins"
+                        android:alpha="0.8"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Schedule Action -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_schedule"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/quick_action_gradient_schedule"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_schedule"
+                        android:layout_marginBottom="12dp"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Schedule"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Set reminders"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins"
+                        android:alpha="0.8"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- View Stats Action -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_stats"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@android:color/white"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/quick_action_gradient_stats"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_analytics"
+                        android:layout_marginBottom="12dp"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View Stats"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="See progress"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins"
+                        android:alpha="0.8"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!-- Premium Features Grid Section -->
+    <TextView
+        android:id="@+id/text_features_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Features"
+        android:textColor="@color/text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scroll_quick_actions" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_features_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/text_features_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Row 1: Usage Analytics and App Limits -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_usage_analytics"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/card_app_limits"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/accent">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_analytics"
+                        app:tint="@android:color/white" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Usage Analytics"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Track your habits"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_app_limits"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@id/card_usage_analytics"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/secondary">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_schedule"
+                        app:tint="@android:color/white" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="App Limits"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Set boundaries"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Row 2: Content Blocking and Smart Insights -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_content_blocking"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginEnd="12dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/card_smart_insights"
+            app:layout_constraintTop_toBottomOf="@id/card_usage_analytics"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/error">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_shield"
+                        app:tint="@android:color/white" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Content Blocking"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Block distractions"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_smart_insights"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="12dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@id/card_content_blocking"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_app_limits"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/warning">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_star"
+                        app:tint="@android:color/white" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Smart Insights"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Get recommendations"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Enhanced Current Mode Status Banner -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_mode_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/layout_features_grid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:orientation="horizontal"
+            android:background="@drawable/mode_status_gradient"
+            android:padding="24dp"
+            android:gravity="center_vertical">
 
-            <ImageView
-                android:id="@+id/image_service_status"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:src="@drawable/ic_shield"
-                android:background="@drawable/circle_background_success"
-                android:padding="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/white" />
+            <!-- Status Icon with Pulse Animation -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp">
 
-            <TextView
-                android:id="@+id/text_service_status"
+                <!-- Pulse Ring -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    app:cardCornerRadius="28dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    android:alpha="0.3">
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="6dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <ImageView
+                        android:id="@+id/image_mode_status"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_analytics"
+                        app:tint="@color/accent" />
+
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:text="Focus is protecting you from distractions"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#2C3E50"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/image_service_status"
-                app:layout_constraintTop_toTopOf="@id/image_service_status" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_service_desc"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:text="All systems are active and monitoring"
-                android:textSize="14sp"
-                android:textColor="#7F8C8D"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/image_service_status"
-                app:layout_constraintTop_toBottomOf="@id/text_service_status" />
+                <TextView
+                    android:id="@+id/text_current_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Currently in Monitor Mode"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_toggle_service"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/action_stop"
-                android:textAllCaps="false"
-                android:textColor="@color/primary"
-                app:strokeColor="@color/primary"
-                app:strokeWidth="2dp"
-                app:cornerRadius="16dp"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                app:layout_constraintTop_toBottomOf="@id/text_service_desc" />
+                <TextView
+                    android:id="@+id/text_mode_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Tracking your usage patterns and providing insights"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/poppins"
+                    android:alpha="0.9" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <!-- Live Status Indicator -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@drawable/status_indicator_active"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Service Active"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppins"
+                        android:alpha="0.8" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Action Indicator -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/accent" />
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.core.widget.NestedScrollView>

@@ -1,0 +1,89 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="280dp"
+    android:height="280dp"
+    android:viewportWidth="280"
+    android:viewportHeight="280">
+    
+    <!-- Background Circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.1"
+        android:pathData="M140,40 A100,100 0 1,1 140,240 A100,100 0 1,1 140,40 Z" />
+    
+    <!-- Left Mode (Normal) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.9"
+        android:pathData="M80,100 L120,100 A10,10 0 0,1 130,110 L130,170 A10,10 0 0,1 120,180 L80,180 A10,10 0 0,1 70,170 L70,110 A10,10 0 0,1 80,100 Z" />
+    
+    <!-- Normal Mode Icon (Analytics) -->
+    <path
+        android:fillColor="#764BA2"
+        android:pathData="M85,120 L95,120 L95,150 L85,150 Z" />
+    <path
+        android:fillColor="#764BA2"
+        android:pathData="M100,130 L110,130 L110,150 L100,150 Z" />
+    <path
+        android:fillColor="#764BA2"
+        android:pathData="M115,125 L125,125 L125,150 L115,150 Z" />
+    
+    <!-- Right Mode (Focus) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.9"
+        android:pathData="M160,100 L200,100 A10,10 0 0,1 210,110 L210,170 A10,10 0 0,1 200,180 L160,180 A10,10 0 0,1 150,170 L150,110 A10,10 0 0,1 160,100 Z" />
+    
+    <!-- Focus Mode Icon (Shield) -->
+    <path
+        android:fillColor="#764BA2"
+        android:pathData="M180,120 L180,150 A15,15 0 0,0 195,135 A15,15 0 0,0 180,120 Z" />
+    <path
+        android:fillColor="#764BA2"
+        android:pathData="M180,120 L180,150 A15,15 0 0,1 165,135 A15,15 0 0,1 180,120 Z" />
+    
+    <!-- Toggle Switch -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.8"
+        android:pathData="M120,200 L160,200 A10,10 0 0,1 170,210 A10,10 0 0,1 160,220 L120,220 A10,10 0 0,1 110,210 A10,10 0 0,1 120,200 Z" />
+    
+    <!-- Toggle Knob -->
+    <path
+        android:fillColor="#764BA2"
+        android:pathData="M155,202 C159.42,202 163,205.58 163,210 C163,214.42 159.42,218 155,218 C150.58,218 147,214.42 147,210 C147,205.58 150.58,202 155,202 Z" />
+    
+    <!-- Connection Lines -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeAlpha="0.6"
+        android:pathData="M100,190 Q140,195 140,200" />
+    
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeAlpha="0.6"
+        android:pathData="M180,190 Q140,195 140,200" />
+    
+    <!-- Floating Elements -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M50,74 C53.31,74 56,76.69 56,80 C56,83.31 53.31,86 50,86 C46.69,86 44,83.31 44,80 C44,76.69 46.69,74 50,74 Z" />
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M230,82 C234.42,82 238,85.58 238,90 C238,94.42 234.42,98 230,98 C225.58,98 222,94.42 222,90 C222,85.58 225.58,82 230,82 Z" />
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M60,215 C62.76,215 65,217.24 65,220 C65,222.76 62.76,225 60,225 C57.24,225 55,222.76 55,220 C55,217.24 57.24,215 60,215 Z" />
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M220,203 C223.87,203 227,206.13 227,210 C227,213.87 223.87,217 220,217 C216.13,217 213,213.87 213,210 C213,206.13 216.13,203 220,203 Z" />
+        
+</vector>

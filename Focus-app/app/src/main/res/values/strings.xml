@@ -13,6 +13,36 @@
     <string name="title_stats">Statistics</string>
     <string name="title_settings">Settings</string>
     
+    <!-- App Modes -->
+    <string name="mode_normal">Normal Mode</string>
+    <string name="mode_focus">Focus Mode</string>
+    <string name="mode_normal_description">Monitor your digital habits, set limits, and get insights on your app usage patterns to build awareness.</string>
+    <string name="mode_focus_description">Block distracting apps and content during crucial work or study hours to maintain complete concentration.</string>
+    
+    <!-- Normal Mode Features -->
+    <string name="feature_usage_analytics">Usage Analytics</string>
+    <string name="feature_usage_analytics_desc">Track app usage and patterns</string>
+    <string name="feature_smart_limits">Smart Limits</string>
+    <string name="feature_smart_limits_desc">Set daily time limits for apps</string>
+    <string name="feature_insights">Insights</string>
+    <string name="feature_insights_desc">Get usage insights and recommendations</string>
+    
+    <!-- Focus Mode Features -->
+    <string name="feature_content_blocking">Content Blocking</string>
+    <string name="feature_content_blocking_desc">Block distracting apps and websites</string>
+    <string name="feature_content_filtering">Content Filtering</string>
+    <string name="feature_content_filtering_desc">Filter inappropriate content</string>
+    <string name="feature_notification_control">Notification Control</string>
+    <string name="feature_notification_control_desc">Silence non-essential notifications</string>
+    
+    <!-- Action Buttons -->
+    <string name="action_view_analytics">VIEW ANALYTICS</string>
+    <string name="action_set_limits">SET LIMITS</string>
+    <string name="action_view_insights">VIEW INSIGHTS</string>
+    <string name="action_focus_now">FOCUS NOW</string>
+    <string name="action_take_break">QUICK BREAK</string>
+    <string name="action_schedule">SCHEDULE</string>
+    
     <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="category_general">General</string>
@@ -58,6 +88,28 @@
     <string name="onboarding_accessibility">Accessibility Service</string>
     <string name="onboarding_usage_stats">Usage Statistics</string>
     <string name="onboarding_setup">Setup</string>
+    <string name="onboarding_illustration">Onboarding illustration</string>
+    
+    <!-- Onboarding Content -->
+    <string name="onboarding_page1_title">Welcome to Focus</string>
+    <string name="onboarding_page1_subtitle">Take Control</string>
+    <string name="onboarding_page1_description">Regain control of your digital life with intelligent content blocking and usage insights.</string>
+    
+    <string name="onboarding_page2_title">Dual Modes</string>
+    <string name="onboarding_page2_subtitle">Normal &amp; Focus</string>
+    <string name="onboarding_page2_description">Switch between Normal Mode for analytics and Focus Mode for distraction-free productivity.</string>
+    
+    <string name="onboarding_page3_title">Smart Blocking</string>
+    <string name="onboarding_page3_subtitle">Content Protection</string>
+    <string name="onboarding_page3_description">Block distracting short-form videos, adult content, and time-wasting apps automatically.</string>
+    
+    <string name="onboarding_page4_title">Insights &amp; Analytics</string>
+    <string name="onboarding_page4_subtitle">Track Progress</string>
+    <string name="onboarding_page4_description">Get detailed insights into your digital habits and track your productivity improvements.</string>
+    
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_get_started">Get Started</string>
     
     <!-- Actions -->
     <string name="action_start">Start Focus</string>
@@ -140,5 +192,14 @@
         <item>standard</item>
         <item>detailed</item>
         <item>silent</item>
+    </string-array>
+    
+    <string-array name="time_periods">
+        <item>Today</item>
+        <item>Yesterday</item>
+        <item>This Week</item>
+        <item>Last Week</item>
+        <item>This Month</item>
+        <item>Last Month</item>
     </string-array>
 </resources>

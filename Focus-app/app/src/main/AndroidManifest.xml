@@ -27,21 +27,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Focus">
 
-        <!-- Main Activity -->
+        <!-- Splash Activity -->
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+            android:name=".ui.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Focus.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Settings Activity -->
+        <!-- Onboarding Activity -->
         <activity
-            android:name=".ui.SettingsActivity"
-            android:label="@string/settings_title"
-            android:parentActivityName=".ui.MainActivity" />
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Focus.Onboarding" />
+
+        <!-- Main Activity -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false" />
+
+
 
         <!-- Accessibility Service -->
         <service
@@ -67,12 +75,32 @@
                 android:value="Focus mode requires constant monitoring of running applications to prevent distractions. This monitoring runs as a foreground service to ensure reliability even when the app is not in the foreground." />
         </service>
 
+        <!-- Usage Analytics Service for Normal Mode -->
+        <service
+            android:name=".service.UsageAnalyticsService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" >
+            <!-- Required declaration for foregroundServiceType="specialUse" -->
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Usage analytics service tracks app usage patterns to provide insights and enforce limits in Normal Mode. This monitoring runs as a foreground service to ensure continuous data collection." />
+        </service>
+
         <!-- Blocked Content Page Activity -->
         <activity
             android:name=".ui.blocker.BlockedPageActivity"
             android:label="Content Blocked"
             android:theme="@style/Theme.Focus"
             android:exported="false" />
+            
+        <!-- Focus Disrupt Activity -->
+        <activity
+            android:name=".ui.blocker.FocusDisruptActivity"
+            android:label="Stay Focused"
+            android:theme="@style/Theme.Focus"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:excludeFromRecents="true" />
             
         <!-- Device Admin Receiver -->
         <receiver

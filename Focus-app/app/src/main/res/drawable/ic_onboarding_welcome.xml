@@ -1,0 +1,60 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="280dp"
+    android:height="280dp"
+    android:viewportWidth="280"
+    android:viewportHeight="280">
+    
+    <!-- Background Circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.1"
+        android:pathData="M140,40 A100,100 0 1,1 140,240 A100,100 0 1,1 140,40 Z" />
+    
+    <!-- Phone Outline -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M110,80 L170,80 A15,15 0 0,1 185,95 L185,185 A15,15 0 0,1 170,200 L110,200 A15,15 0 0,1 95,185 L95,95 A15,15 0 0,1 110,80 Z" />
+    
+    <!-- Screen -->
+    <path
+        android:fillColor="#667EEA"
+        android:pathData="M105,95 L175,95 A5,5 0 0,1 180,100 L180,170 A5,5 0 0,1 175,175 L105,175 A5,5 0 0,1 100,170 L100,100 A5,5 0 0,1 105,95 Z" />
+    
+    <!-- Focus Icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M140,115 C151.05,115 160,123.95 160,135 C160,146.05 151.05,155 140,155 C128.95,155 120,146.05 120,135 C120,123.95 128.95,115 140,115 Z" />
+    
+    <!-- Inner Focus Circle -->
+    <path
+        android:fillColor="#667EEA"
+        android:pathData="M140,127 C144.42,127 148,130.58 148,135 C148,139.42 144.42,143 140,143 C135.58,143 132,139.42 132,135 C132,130.58 135.58,127 140,127 Z" />
+    
+    <!-- Home Button -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M140,181 C142.21,181 144,182.79 144,185 C144,187.21 142.21,189 140,189 C137.79,189 136,187.21 136,185 C136,182.79 137.79,181 140,181 Z" />
+    
+    <!-- Floating Elements -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M60,92 C64.42,92 68,95.58 68,100 C68,104.42 64.42,108 60,108 C55.58,108 52,104.42 52,100 C52,95.58 55.58,92 60,92 Z" />
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M220,114 C223.31,114 226,116.69 226,120 C226,123.31 223.31,126 220,126 C216.69,126 214,123.31 214,120 C214,116.69 216.69,114 220,114 Z" />
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M70,175 C72.76,175 75,177.24 75,180 C75,182.76 72.76,185 70,185 C67.24,185 65,182.76 65,180 C65,177.24 67.24,175 70,175 Z" />
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M210,193 C213.87,193 217,196.13 217,200 C217,203.87 213.87,207 210,207 C206.13,207 203,203.87 203,200 C203,196.13 206.13,193 210,193 Z" />
+        
+</vector>

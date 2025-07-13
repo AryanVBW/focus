@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/surface_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- App Icon -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="2dp">
+
+            <ImageView
+                android:id="@+id/image_app_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@mipmap/ic_launcher" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- App Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Instagram"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"
+                tools:text="Instagram" />
+
+            <TextView
+                android:id="@+id/text_app_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Social Media"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:fontFamily="@font/poppins"
+                android:layout_marginTop="2dp"
+                tools:text="Social Media" />
+
+        </LinearLayout>
+
+        <!-- Usage Stats -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/text_usage_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2h 30m"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"
+                tools:text="2h 30m" />
+
+            <TextView
+                android:id="@+id/text_open_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 opens"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                android:fontFamily="@font/poppins"
+                android:layout_marginTop="2dp"
+                tools:text="15 opens" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

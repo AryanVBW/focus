@@ -1,45 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#4F46E5</color>
-    <color name="primary_dark">#3730A3</color>
-    <color name="primary_light">#C7D2FE</color>
-    <color name="secondary">#10B981</color>
-    <color name="secondary_dark">#059669</color>
-    <color name="secondary_light">#A7F3D0</color>
-    <color name="accent">#7C3AED</color>
+    <!-- Modern Dark Theme Colors -->
+    <color name="primary">#6366F1</color>
+    <color name="primary_dark">#4F46E5</color>
+    <color name="primary_light">#A5B4FC</color>
+    <color name="secondary">#06B6D4</color>
+    <color name="secondary_dark">#0891B2</color>
+    <color name="secondary_light">#67E8F9</color>
+    <color name="accent">#8B5CF6</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gray_100">#F3F4F6</color>
-    <color name="gray_200">#E5E7EB</color>
-    <color name="gray_300">#D1D5DB</color>
-    <color name="gray_400">#9CA3AF</color>
-    <color name="gray_500">#6B7280</color>
-    <color name="gray_600">#4B5563</color>
-    <color name="gray_700">#374151</color>
-    <color name="gray_800">#1F2937</color>
-    <color name="gray_900">#111827</color>
-    <color name="background">#F9FAFB</color>
+    
+    <!-- Dark Theme Background Colors -->
+    <color name="dark_background">#1A1B23</color>
+    <color name="dark_surface">#2A2D3A</color>
+    <color name="dark_surface_variant">#3A3D4A</color>
+    <color name="dark_card_background">#2A2D3A</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#F8FAFC</color>
+    <color name="background_light">#FFFFFF</color>
+    <color name="surface">#FCFCFC</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_variant">#F1F5F9</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_tertiary">#94A3B8</color>
+    <color name="text_dark">#1E293B</color>
+    
+    <!-- Status Colors -->
     <color name="error">#EF4444</color>
+    <color name="error_light">#FEE2E2</color>
     <color name="warning">#F59E0B</color>
     <color name="success">#10B981</color>
     
-    <!-- Additional UI colors -->
-    <color name="background_light">#F8F9FA</color>
-    <color name="text_primary">#2C3E50</color>
-    <color name="text_secondary">#7F8C8D</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="on_surface">#2C3E50</color>
+    <!-- Gray Scale -->
+    <color name="gray_50">#F8FAFC</color>
+    <color name="gray_100">#F1F5F9</color>
+    <color name="gray_200">#E2E8F0</color>
+    <color name="gray_300">#CBD5E1</color>
+    <color name="gray_400">#94A3B8</color>
+    <color name="gray_500">#64748B</color>
+    <color name="gray_600">#475569</color>
+    <color name="gray_700">#334155</color>
+    <color name="gray_800">#1E293B</color>
+    <color name="gray_900">#0F172A</color>
+    
+    <!-- Mode Colors -->
+    <color name="normal_mode">#6366F1</color>
+    <color name="focus_mode">#8B5CF6</color>
+    
+    <!-- Additional Effects -->
+    <color name="blur_overlay">#0D000000</color>
+    <color name="shimmer_highlight">#33FFFFFF</color>
+    
+    <!-- Legacy colors for compatibility -->
+    <color name="active">#10B981</color>
+    <color name="inactive">#94A3B8</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="on_surface">#0F172A</color>
     <color name="on_primary">#FFFFFF</color>
     <color name="on_secondary">#FFFFFF</color>
+    <color name="card_shadow">#1A000000</color>
+    <color name="divider">#E2E8F0</color>
     
-    <!-- Gradient colors -->
-    <color name="gradient_start">#667eea</color>
-    <color name="gradient_end">#764ba2</color>
+    <!-- Professional Dashboard Colors -->
+    <color name="glass_background">#F0F4FF</color>
+    <color name="glass_border">#E0E7FF</color>
+    <color name="premium_shadow">#0D1F3B1A</color>
+    <color name="status_active">#10B981</color>
+    <color name="status_warning">#F59E0B</color>
+    <color name="status_error">#EF4444</color>
     
-    <!-- Status colors -->
-    <color name="active">#27AE60</color>
-    <color name="inactive">#BDC3C7</color>
-    <color name="warning_light">#FFF3CD</color>
-    <color name="error_light">#F8D7DA</color>
-    <color name="success_light">#D4EDDA</color>
+    <!-- Onboarding Colors -->
+    <color name="onboarding_bg_1">#667EEA</color>
+    <color name="onboarding_bg_2">#764BA2</color>
+    <color name="onboarding_bg_3">#F093FB</color>
+    <color name="onboarding_bg_4">#4FACFE</color>
+    <color name="white_alpha_30">#4DFFFFFF</color>
+    <color name="white_alpha_70">#B3FFFFFF</color>
+    <color name="white_alpha_80">#CCFFFFFF</color>
 </resources>
