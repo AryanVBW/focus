@@ -513,6 +513,75 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- General Section -->
+        <TextView
+            android:id="@+id/tv_general_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/poppins"
+            android:text="General"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_break_reminders" />
+
+        <!-- Application Theme Setting -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_change_theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/dark_surface"
+            app:layout_constraintTop_toBottomOf="@id/tv_general_title">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Application theme"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/poppins" />
+
+                    <TextView
+                        android:id="@+id/txt_theme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Follow system settings"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:alpha="0.7"
+                        android:fontFamily="@font/poppins" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/white"
+                    android:alpha="0.7" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!-- Account Section -->
         <TextView
             android:id="@+id/tv_account_title"
@@ -525,7 +594,7 @@
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_break_reminders" />
+            app:layout_constraintTop_toBottomOf="@id/card_change_theme" />
 
         <!-- Log Out Setting -->
         <androidx.cardview.widget.CardView

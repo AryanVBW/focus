@@ -32,6 +32,10 @@ class SettingsViewModel : ViewModel() {
     fun openMotivationQuotesSettings() {
         _navigationEvent.value = "motivation_quotes"
     }
+
+    fun openThemeSwitchingSettings() {
+        _navigationEvent.value = "theme_switch"
+    }
     
     fun openBreakRemindersSettings() {
         _navigationEvent.value = "break_reminders"
