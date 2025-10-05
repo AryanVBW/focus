@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:padding="24dp">
 
     <!-- Illustration -->
@@ -41,7 +42,7 @@
             android:fontFamily="@font/inter_bold"
             android:gravity="center"
             android:text="Welcome to Focus"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="32sp"
             android:textStyle="bold" />
 
@@ -54,7 +55,8 @@
             android:fontFamily="@font/inter_medium"
             android:gravity="center"
             android:text="Regain control of your digital life"
-            android:textColor="@color/white_alpha_80"
+            android:textColor="@color/text_primary"
+            android:alpha="0.8"
             android:textSize="18sp" />
 
         <!-- Description -->
@@ -66,7 +68,8 @@
             android:gravity="center"
             android:lineSpacingExtra="4dp"
             android:text="Focus helps you break free from digital distractions and build healthier technology habits."
-            android:textColor="@color/white_alpha_70"
+            android:textColor="@color/text_primary"
+            android:alpha="0.7"
             android:textSize="16sp" />
 
     </LinearLayout>

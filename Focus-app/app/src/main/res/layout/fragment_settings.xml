@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
+    android:background="@color/background"
     android:fillViewport="true"
     tools:context=".ui.settings.SettingsFragment">
 
@@ -21,7 +21,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/white"
+            app:tint="@color/on_surface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Settings"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Focus Sessions"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -61,7 +61,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/tv_focus_sessions_title">
 
             <LinearLayout
@@ -81,7 +81,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Timer Length"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -89,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="25 minutes"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -100,7 +100,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -115,7 +115,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_timer_length">
 
             <LinearLayout
@@ -135,7 +135,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Short Break"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -143,7 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5 minutes"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -154,7 +154,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -169,7 +169,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_short_break">
 
             <LinearLayout
@@ -189,7 +189,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Long Break"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -197,7 +197,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="15 minutes"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -208,7 +208,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -222,7 +222,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Blocking"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -237,7 +237,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/tv_blocking_title">
 
             <LinearLayout
@@ -257,7 +257,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Websites"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -265,7 +265,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Block distracting websites"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -276,7 +276,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -291,7 +291,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_websites">
 
             <LinearLayout
@@ -311,7 +311,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Apps"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -319,7 +319,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Block distracting apps"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -330,7 +330,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -345,7 +345,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_apps">
 
             <LinearLayout
@@ -365,7 +365,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Schedules"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -373,7 +373,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Schedule focus times"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -384,7 +384,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -398,7 +398,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Notifications"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -413,7 +413,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/tv_notifications_title">
 
             <LinearLayout
@@ -433,7 +433,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Motivation Quotes"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -441,7 +441,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Get inspirational quotes"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -452,7 +452,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -467,7 +467,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_motivation_quotes">
 
             <LinearLayout
@@ -487,7 +487,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Break Reminders"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -495,7 +495,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Get break reminders"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -506,7 +506,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -521,7 +521,7 @@
             android:layout_marginTop="32dp"
             android:fontFamily="@font/poppins"
             android:text="General"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -535,7 +535,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/tv_general_title">
 
             <LinearLayout
@@ -555,7 +555,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Application theme"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins" />
 
@@ -564,7 +564,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Follow system settings"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:alpha="0.7"
                         android:fontFamily="@font/poppins" />
@@ -575,7 +575,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/white"
+                    app:tint="@color/on_surface"
                     android:alpha="0.7" />
 
             </LinearLayout>
@@ -589,7 +589,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Account"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -604,7 +604,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/tv_account_title">
 
             <LinearLayout

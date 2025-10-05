@@ -6,8 +6,8 @@
     
     <!-- Background Circle -->
     <path
-        android:fillColor="#FFFFFF"
-        android:fillAlpha="0.1"
+        android:fillColor="@color/dark_surface"
+        android:fillAlpha="1"
         android:pathData="M140,40 A100,100 0 1,1 140,240 A100,100 0 1,1 140,40 Z" />
     
     <!-- Phone Outline -->
