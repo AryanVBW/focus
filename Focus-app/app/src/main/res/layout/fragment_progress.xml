@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
+    android:background="@color/background"
     android:fillViewport="true"
     tools:context=".ui.progress.ProgressFragment">
 
@@ -21,7 +21,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_menu"
-            app:tint="@color/white"
+            app:tint="@color/on_surface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Progress"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Weekly Focus Time"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="25h 30m"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="32sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Last 7 Days"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="14sp"
             android:alpha="0.7"
             android:fontFamily="@font/poppins"
@@ -89,7 +89,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/tv_last_7_days">
 
             <LinearLayout
@@ -127,7 +127,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Mon"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:alpha="0.7"
                             android:fontFamily="@font/poppins" />
@@ -154,7 +154,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Tue"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:alpha="0.7"
                             android:fontFamily="@font/poppins" />
@@ -181,7 +181,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Wed"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:alpha="0.7"
                             android:fontFamily="@font/poppins" />
@@ -208,7 +208,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Thu"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:alpha="0.7"
                             android:fontFamily="@font/poppins" />
@@ -235,7 +235,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Fri"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:alpha="0.7"
                             android:fontFamily="@font/poppins" />
@@ -262,7 +262,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Sat"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:alpha="0.7"
                             android:fontFamily="@font/poppins" />
@@ -289,7 +289,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Sun"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:alpha="0.7"
                             android:fontFamily="@font/poppins" />
@@ -310,7 +310,7 @@
             android:layout_marginTop="24dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_weekly_chart">
 
             <LinearLayout
@@ -323,7 +323,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Daily Streak"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:fontFamily="@font/poppins"
@@ -334,7 +334,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5 Days"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:fontFamily="@font/poppins" />
@@ -350,7 +350,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Insights"
-            android:textColor="@color/white"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
@@ -365,7 +365,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/tv_insights_title">
 
             <LinearLayout
@@ -394,7 +394,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Best Focus Day"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:fontFamily="@font/poppins" />
 
@@ -403,7 +403,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Wednesday"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:fontFamily="@font/poppins" />
@@ -422,7 +422,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_best_focus_day">
 
             <LinearLayout
@@ -451,7 +451,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Longest Session"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:fontFamily="@font/poppins" />
 
@@ -460,7 +460,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2h 15m"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:fontFamily="@font/poppins" />
@@ -479,7 +479,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_longest_session">
 
             <LinearLayout
@@ -508,7 +508,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Distractions Blocked"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:fontFamily="@font/poppins" />
 
@@ -517,7 +517,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:fontFamily="@font/poppins" />

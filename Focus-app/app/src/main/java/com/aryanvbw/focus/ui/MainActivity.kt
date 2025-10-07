@@ -24,6 +24,7 @@ import com.aryanvbw.focus.util.AppSettings
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,11 +34,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        settings = AppSettings(this)
+        applyTheme()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        settings = AppSettings(this)
-        
+
         // Mark onboarding as completed if user reached MainActivity
         if (!settings.isOnboardingCompleted()) {
             settings.setOnboardingCompleted(true)
@@ -55,10 +58,22 @@ class MainActivity : AppCompatActivity() {
             // If permission is already granted, navigate to home and start appropriate services
             settings.setServiceEnabled(true)
             startAppropriateServices()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_home)
         } else {
             // If permission is not granted, navigate to permission screen
             findNavController(R.id.nav_host_fragment).navigate(R.id.navigation_permission_accessibility)
+        }
+    }
+
+    private fun applyTheme() {
+        val selectedTheme = settings.getTheme()
+
+        when(selectedTheme) {
+            AppSettings.THEME_SYSTEM ->
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            AppSettings.THEME_LIGHT ->
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            AppSettings.THEME_DARK ->
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
     

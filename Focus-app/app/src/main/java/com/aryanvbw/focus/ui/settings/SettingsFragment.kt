@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -81,6 +82,12 @@ class SettingsFragment : Fragment() {
         binding.cardBreakReminders.setOnClickListener {
             settingsViewModel.openBreakRemindersSettings()
         }
+
+        // General settings
+        binding.cardChangeTheme.setOnClickListener {
+            settingsViewModel.openThemeSwitchingSettings()
+        }
+        updateThemeText()
         
         // Account settings
         binding.cardLogOut.setOnClickListener {
@@ -97,6 +104,7 @@ class SettingsFragment : Fragment() {
                 "websites" -> showWebsiteBlockingDialog()
                 "schedules" -> showScheduleDialog()
                 "motivation_quotes" -> showMotivationQuotesDialog()
+                "theme_switch" -> showThemeSwitchDialog()
                 "break_reminders" -> showBreakRemindersDialog()
             }
         }
@@ -152,7 +160,49 @@ class SettingsFragment : Fragment() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
+    private fun showThemeSwitchDialog() {
+        val options = arrayOf("Follow system settings", "Light", "Dark")
+        val values = arrayOf(
+            AppSettings.THEME_SYSTEM,
+            AppSettings.THEME_LIGHT,
+            AppSettings.THEME_DARK
+        )
+        val currentValue = appSettings.getTheme();
+        val currentIndex = values.indexOf(currentValue)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Application Theme")
+            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                appSettings.setTheme(values[which])
+                dialog.dismiss()
+                Toast.makeText(requireContext(), "Theme updated", Toast.LENGTH_LONG).show()
+                toggleTheme(values[which])
+            }
+            .show()
+    }
+
+    private fun toggleTheme(selectedTheme: Int) {
+        when(selectedTheme) {
+            AppSettings.THEME_SYSTEM ->
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            AppSettings.THEME_LIGHT ->
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            AppSettings.THEME_DARK ->
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+
+        requireActivity().recreate()
+    }
+
+    private fun updateThemeText() {
+        binding.txtTheme.text = when(appSettings.getTheme()) {
+            AppSettings.THEME_LIGHT -> "Light theme"
+            AppSettings.THEME_DARK -> "Dark theme"
+            else -> "Follow system settings"
+        }
+    }
+
     private fun showWebsiteBlockingDialog() {
         Toast.makeText(requireContext(), "Website blocking settings", Toast.LENGTH_SHORT).show()
     }
@@ -192,7 +242,7 @@ class SettingsFragment : Fragment() {
     private fun showScheduleDialog() {
         Toast.makeText(requireContext(), "Schedule settings", Toast.LENGTH_SHORT).show()
     }
-    
+
     private fun showLogoutConfirmation() {
         AlertDialog.Builder(requireContext())
             .setTitle("Log Out")
@@ -203,7 +253,7 @@ class SettingsFragment : Fragment() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
     private fun performLogout() {
         // Clear user session data
         appSettings.clearUserSession()
