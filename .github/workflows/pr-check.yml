@@ -28,7 +28,23 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
-          cache: 'gradle'
+
+      - name: 🔧 Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: wrapper
+          build-root-directory: Focus-app
+
+      - name: 🔍 Validate Gradle Wrapper
+        working-directory: ./Focus-app
+        run: |
+          echo "Checking Gradle wrapper files..."
+          ls -la gradle/wrapper/
+          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            echo "❌ Error: gradle-wrapper.jar is missing!"
+            exit 1
+          fi
+          echo "✅ Gradle wrapper files are present"
 
       - name: 🔧 Grant execute permission for gradlew
         working-directory: ./Focus-app
@@ -36,26 +52,26 @@ jobs:
 
       - name: 🧹 Clean build
         working-directory: ./Focus-app
-        run: ./gradlew clean
+        run: ./gradlew clean --no-daemon
 
       - name: 🏗️ Build Debug APK
         id: build_apk
         working-directory: ./Focus-app
         run: |
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --stacktrace --no-daemon
           echo "apk_path=$(find app/build/outputs/apk/debug -name '*.apk' | head -n 1)" >> $GITHUB_OUTPUT
         continue-on-error: true
 
       - name: 🧪 Run Unit Tests
         id: unit_tests
         working-directory: ./Focus-app
-        run: ./gradlew testDebugUnitTest --stacktrace
+        run: ./gradlew testDebugUnitTest --stacktrace --no-daemon
         continue-on-error: true
 
       - name: 🔍 Run Lint Check
         id: lint_check
         working-directory: ./Focus-app
-        run: ./gradlew lintDebug --stacktrace
+        run: ./gradlew lintDebug --stacktrace --no-daemon
         continue-on-error: true
 
       - name: 📊 Upload Test Results
