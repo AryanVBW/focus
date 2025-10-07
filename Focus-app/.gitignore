@@ -90,7 +90,8 @@ gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jars if they're required to build
 # Note: We recommend storing wrapper jars in source control for improved reproducibility.
-# */gradle-wrapper.jar
+# Exception: DO NOT ignore gradle-wrapper.jar - it's required for builds
+!gradle/wrapper/gradle-wrapper.jar
 
 # Ignore Gradle build receipts
 receipt.txt
