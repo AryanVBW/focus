@@ -8,23 +8,58 @@ The Focus app implements **selective content blocking** that closes only distrac
 
 **The app does NOT block entire applications. It only closes the specific distracting feature (short videos/reels) and lets users continue using other parts of the app.**
 
-## Blocking Mechanism
+## Smart Blocking Mechanism (Enhanced)
 
 ### How It Works
 
+Focus uses an intelligent **two-tier strategy** specifically for short-form video content:
+
 1. **Detection**: The accessibility service detects when a user opens distracting content (Reels, Shorts, Stories, etc.)
-2. **Action**: The app performs a `GLOBAL_ACTION_BACK` (back button press)
-3. **Result**: The distracting content player closes, returning the user to the previous screen within the app
-4. **Outcome**: The user can continue using other features of the app normally
+2. **Strategy 1 - Smart Redirection (Primary)**: Attempts to navigate to a safe section within the app (e.g., Home tab, Search tab)
+3. **Strategy 2 - Back Navigation (Fallback)**: If redirection fails, performs a single `GLOBAL_ACTION_BACK` (back button press)
+4. **Result**: The distracting content player closes, returning the user to a safe screen within the app
+5. **Outcome**: The user can continue using other features of the app normally
 
-### Why Back Navigation?
+### Why This Two-Tier Approach?
 
-Using `GLOBAL_ACTION_BACK` is the most effective and non-disruptive method because:
-- It mimics a natural user action (pressing the back button)
-- It closes only the current screen/player, not the entire app
-- It returns the user to the previous screen within the app
-- It works consistently across all Android versions
-- It doesn't require root access or special permissions
+**Primary Strategy - Smart Redirection:**
+- Navigates directly to safe tabs (Home, Search, etc.)
+- More reliable than back navigation
+- Prevents edge cases where back navigation might close the entire app
+- Provides better user experience with predictable navigation
+
+**Fallback Strategy - Back Navigation:**
+- Mimics a natural user action (pressing the back button)
+- Works when specific UI elements aren't found
+- Consistent across all Android versions
+- Doesn't require root access or special permissions
+
+### Throttling Protection
+
+To prevent multiple rapid blocking events that could close the entire app:
+- **Back Press Cooldown**: 1 second between back presses
+- **Event Throttling**: 300ms between blocking events for the same app
+- **Single Action Guarantee**: Only one blocking action per detection event
+
+## Blocking Actions
+
+The app supports three blocking actions, but **for short-form video content (Reels/Shorts/Stories), it ALWAYS uses "Close Player" mode** regardless of user settings:
+
+### Close Player (Default & Forced for Short Videos)
+- ✅ **Recommended for all users**
+- Only closes the player/shorts viewer
+- Keeps the app open for other features
+- Uses smart redirection + back navigation
+
+### Close App
+- ❌ **Not used for short videos** (overridden by app)
+- Forces the entire app to close
+- Only applies to other content types if user selects this
+
+### Lock Screen
+- 🔒 Can be selected for other content types
+- Locks the device screen entirely
+- Not applied to short videos (overridden)
 
 ## App-Specific Behavior
 
