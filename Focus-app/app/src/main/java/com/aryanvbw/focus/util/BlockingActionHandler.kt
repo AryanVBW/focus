@@ -12,7 +12,8 @@ import android.widget.Toast
 import com.aryanvbw.focus.receiver.FocusDeviceAdminReceiver
 
 /**
- * Utility class for handling different blocking actions
+ * Utility class for handling different blocking actions with throttling
+ * to prevent multiple rapid actions that could close the entire app
  */
 class BlockingActionHandler(
     private val context: Context,
@@ -20,6 +21,10 @@ class BlockingActionHandler(
 ) {
     
     private val TAG = "BlockingActionHandler"
+    
+    // Throttling mechanism to prevent multiple back presses
+    private var lastBackPressTime = 0L
+    private val BACK_PRESS_COOLDOWN = 1000L // 1 second cooldown between back presses
     
     companion object {
         const val ACTION_CLOSE_PLAYER = "close_player"
@@ -44,11 +49,27 @@ class BlockingActionHandler(
     
     /**
      * Close player/return to previous screen (default behavior)
+     * Uses throttling to prevent multiple back presses that could close the entire app
      */
     private fun closePlayer() {
         try {
-            accessibilityService?.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
-            Log.d(TAG, "Executed close player action (back navigation)")
+            val currentTime = System.currentTimeMillis()
+            
+            // Check if we're within the cooldown period
+            if (currentTime - lastBackPressTime < BACK_PRESS_COOLDOWN) {
+                val remainingCooldown = BACK_PRESS_COOLDOWN - (currentTime - lastBackPressTime)
+                Log.d(TAG, "Back press throttled - cooldown active (${remainingCooldown}ms remaining)")
+                return
+            }
+            
+            // Execute single back press
+            val success = accessibilityService?.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
+            if (success == true) {
+                lastBackPressTime = currentTime
+                Log.d(TAG, "Executed single back navigation to close player (throttling active)")
+            } else {
+                Log.w(TAG, "Back navigation failed or accessibility service not available")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error executing close player action: ${e.message}")
         }

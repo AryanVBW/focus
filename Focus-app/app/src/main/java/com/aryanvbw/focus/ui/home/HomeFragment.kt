@@ -66,8 +66,63 @@ class HomeFragment : Fragment() {
             onModeChanged(newMode)
         }
         
+        // Setup blocking status widget
+        setupBlockingStatusWidget()
+        
         // Set up click listeners for remaining components
         // Focus mode toggle is handled by the animated button
+    }
+    
+    private fun setupBlockingStatusWidget() {
+        try {
+            // Get blocking mode status
+            val blockingAction = settings.getBlockingAction()
+            val blockingModeText = when (blockingAction) {
+                AppSettings.BLOCKING_ACTION_CLOSE_PLAYER -> "Player Only Mode (Active)"
+                AppSettings.BLOCKING_ACTION_CLOSE_APP -> "Full App Close Mode"
+                AppSettings.BLOCKING_ACTION_LOCK_SCREEN -> "Screen Lock Mode"
+                else -> "Player Only Mode (Active)"
+            }
+            
+            val blockingDescription = when (blockingAction) {
+                AppSettings.BLOCKING_ACTION_CLOSE_PLAYER -> "Short videos close automatically, apps stay open"
+                AppSettings.BLOCKING_ACTION_CLOSE_APP -> "Blocked apps close completely"
+                AppSettings.BLOCKING_ACTION_LOCK_SCREEN -> "Screen locks when content is blocked"
+                else -> "Short videos close automatically, apps stay open"
+            }
+            
+            // Find the widget views
+            val widgetView = binding.root.findViewById<View>(R.id.widget_blocking_status)
+            if (widgetView != null) {
+                widgetView.findViewById<android.widget.TextView>(R.id.tv_blocking_mode_status)?.text = blockingModeText
+                widgetView.findViewById<android.widget.TextView>(R.id.tv_blocking_mode_description)?.text = blockingDescription
+                
+                // Set monitored apps
+                val monitoredApps = mutableListOf<String>()
+                if (settings.isAppMonitored(AppSettings.PACKAGE_INSTAGRAM)) monitoredApps.add("Instagram")
+                if (settings.isAppMonitored(AppSettings.PACKAGE_YOUTUBE)) monitoredApps.add("YouTube")
+                if (settings.isAppMonitored(AppSettings.PACKAGE_SNAPCHAT)) monitoredApps.add("Snapchat")
+                if (settings.isAppMonitored(AppSettings.PACKAGE_TIKTOK)) monitoredApps.add("TikTok")
+                if (settings.isAppMonitored(AppSettings.PACKAGE_FACEBOOK)) monitoredApps.add("Facebook")
+                
+                val monitoredAppsText = if (monitoredApps.isEmpty()) {
+                    "No apps monitored"
+                } else {
+                    monitoredApps.joinToString(", ")
+                }
+                widgetView.findViewById<android.widget.TextView>(R.id.tv_monitored_apps)?.text = monitoredAppsText
+                
+                // Setup settings button click listener
+                widgetView.findViewById<android.widget.ImageView>(R.id.btn_blocking_settings)?.setOnClickListener {
+                    // Navigate to settings - you can implement this based on your navigation setup
+                    Toast.makeText(requireContext(), "Opening blocking settings...", Toast.LENGTH_SHORT).show()
+                    // TODO: Navigate to settings fragment or activity
+                }
+            }
+        } catch (e: Exception) {
+            // Log error but don't crash
+            android.util.Log.e("HomeFragment", "Error setting up blocking status widget: ${e.message}")
+        }
     }
 
     private fun setupObservers() {
@@ -173,6 +228,9 @@ class HomeFragment : Fragment() {
         // Refresh statistics
         val currentMode = settings.getCurrentAppMode()
         updateModeUI(currentMode)
+        
+        // Refresh blocking status widget (in case settings changed)
+        setupBlockingStatusWidget()
     }
 
     override fun onDestroyView() {

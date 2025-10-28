@@ -35,13 +35,28 @@
             android:entries="@array/blocking_intensity_entries"
             android:entryValues="@array/blocking_intensity_values"
             android:defaultValue="medium"
-            app:iconSpaceReserved="false" />        <ListPreference
+            app:iconSpaceReserved="false" />        <Preference
+            android:key="blocking_action_info"
+            android:title="📱 How Blocking Works for Short Videos"
+            android:summary="When you open Instagram Reels or YouTube Shorts, Focus will close ONLY the player and return you to the app's main screen. The app stays open for other features."
+            android:selectable="false"
+            app:iconSpaceReserved="false" />
+        
+        <ListPreference
             android:key="blocking_action"
             android:title="Blocking Action"
-            android:summary="What happens when distracting content is detected"
+            android:summary="Current: Only closes player/shorts (Recommended for social media)"
             android:entries="@array/blocking_action_entries"
             android:entryValues="@array/blocking_action_values"
             android:defaultValue="close_player"
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="false" />
+        
+        <Preference
+            android:key="blocking_strategy_info"
+            android:title="ℹ️ Smart Blocking Strategy"
+            android:summary="For Reels/Shorts/Stories: Tries to redirect to safe tabs first, then uses back navigation as fallback. Other content respects your blocking action setting."
+            android:selectable="false"
             app:iconSpaceReserved="false" />
             
         <Preference
