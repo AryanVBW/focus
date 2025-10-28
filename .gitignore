@@ -80,6 +80,8 @@ fastlane/test_output/*.html
 *api*key*.txt
 secrets.*
 *.keystore
+keystore.properties
+keystore_base64.txt
 
 ### Gradle ###
 .gradle
