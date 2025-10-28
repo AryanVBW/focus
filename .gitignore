@@ -112,7 +112,6 @@ receipt.txt
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -126,13 +125,11 @@ hs_err_pid*
 ### Kotlin ###
 # Compiled class files
 *.class
-*.jar
 
 # Log files
 *.log
 
 # Package files
-*.jar
 *.war
 *.nar
 *.ear
