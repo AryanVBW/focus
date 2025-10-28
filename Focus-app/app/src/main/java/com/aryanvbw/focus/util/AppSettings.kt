@@ -619,4 +619,53 @@ class AppSettings(private val context: Context) {
     fun setOnboardingCompleted(completed: Boolean) {
         prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETED, completed).apply()
     }
+    
+    /**
+     * Migration and initialization functions
+     */
+    
+    /**
+     * Ensure the blocking action is set to close_player by default for better UX.
+     * This prevents the entire app from closing when short videos are detected.
+     * Should be called on app startup.
+     */
+    fun ensurePlayerCloseDefault() {
+        val currentAction = getBlockingAction()
+        val migrationDone = prefs.getBoolean("migration_blocking_action_v1", false)
+        
+        if (!migrationDone) {
+            // First time migration - force set to close_player
+            if (currentAction != BLOCKING_ACTION_CLOSE_PLAYER) {
+                android.util.Log.i("AppSettings", "Migration: Changing blocking action from '$currentAction' to 'close_player' for better UX")
+                setBlockingAction(BLOCKING_ACTION_CLOSE_PLAYER)
+            }
+            prefs.edit().putBoolean("migration_blocking_action_v1", true).apply()
+            android.util.Log.i("AppSettings", "Migration complete: Blocking action set to close_player")
+        }
+    }
+    
+    /**
+     * Get the effective blocking action for a specific content type.
+     * For short video content, always returns CLOSE_PLAYER regardless of user setting.
+     */
+    fun getEffectiveBlockingAction(contentType: String): String {
+        // For short video content, always use close_player to avoid closing entire app
+        if (isShortVideoContent(contentType)) {
+            return BLOCKING_ACTION_CLOSE_PLAYER
+        }
+        // For other content, respect user's preference
+        return getBlockingAction()
+    }
+    
+    /**
+     * Check if content type is short video content (reels, shorts, stories)
+     */
+    private fun isShortVideoContent(contentType: String): Boolean {
+        return contentType in listOf(
+            CONTENT_TYPE_REELS,
+            CONTENT_TYPE_SHORTS,
+            CONTENT_TYPE_STORIES,
+            CONTENT_TYPE_SPOTLIGHT
+        )
+    }
 }

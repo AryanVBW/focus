@@ -136,6 +136,8 @@
     <string name="blocking_action_close_player">Close Player (Default)</string>
     <string name="blocking_action_close_app">Close App</string>
     <string name="blocking_action_lock_screen">Lock Screen</string>
+    <string name="blocking_action_info_title">📱 How Blocking Works</string>
+    <string name="blocking_action_info_summary">For Instagram Reels, YouTube Shorts, and similar content: Only the player closes (like pressing back), keeping the app open. For other content: Uses your selected action below.</string>
     
     <!-- Arrays for ListPreferences -->
     <string-array name="blocking_intensity_entries">
@@ -153,9 +155,9 @@
     </string-array>
     
     <string-array name="blocking_action_entries">
-        <item>Navigate Back - Return to previous screen (Recommended)</item>
-        <item>Close App - Force stop the blocked app completely</item>
-        <item>Lock Screen - Lock device to break addiction habits</item>
+        <item>✅ Close Player Only - Returns to previous screen (Recommended for social media)</item>
+        <item>❌ Close Entire App - Force stops the app completely</item>
+        <item>🔒 Lock Screen - Locks device to break scrolling habits</item>
     </string-array>
     
     <string-array name="blocking_action_values">

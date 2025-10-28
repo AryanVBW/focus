@@ -750,26 +750,69 @@ class FocusAccessibilityService : AccessibilityService() {
     }
     
     /**
-     * Block content with user-selected blocking action (for focus mode or when redirection fails)
+     * Block content with intelligent strategy selection.
+     * For short video content (Reels, Shorts, Stories), uses smart redirection first,
+     * then falls back to single back press. This ensures only the player closes, not the entire app.
      */
     private fun blockContentWithAction(packageName: String, contentType: String): Boolean {
         try {
-            Log.d(TAG, "Blocking content with user action for $packageName ($contentType)")
-            executeBlockingAction(packageName, contentType)
-            logBlockedContentEvent(packageName, contentType, "MANUAL_BLOCK")
-            return true
+            Log.d(TAG, "Blocking content for $packageName ($contentType)")
+            
+            // For short video content, use smart strategy to keep app open
+            if (isShortVideoContent(contentType)) {
+                Log.i(TAG, "Short video detected - using smart blocking strategy")
+                
+                // Strategy 1: Try intelligent app redirection first (preferred)
+                val rootNode = rootInActiveWindow
+                if (rootNode != null) {
+                    val redirected = redirectToSafeAppSection(rootNode, packageName, contentType)
+                    if (redirected) {
+                        Log.i(TAG, "Successfully redirected from $contentType in $packageName")
+                        showUserFeedback("Returned to ${getAppName(packageName)} feed", false)
+                        logBlockedContentEvent(packageName, contentType, "SMART_REDIRECT")
+                        return true
+                    }
+                }
+                
+                // Strategy 2: Fallback to single back press (closes player only)
+                Log.d(TAG, "Redirection failed, using back navigation for $packageName")
+                executeBlockingAction(packageName, AppSettings.BLOCKING_ACTION_CLOSE_PLAYER)
+                showUserFeedback("Closed ${contentType} player", false)
+                logBlockedContentEvent(packageName, contentType, "BACK_NAVIGATION")
+                return true
+            } else {
+                // For other content types, use user's preferred blocking action
+                Log.d(TAG, "Non-short-video content - using user preferred action")
+                executeBlockingAction(packageName, contentType)
+                logBlockedContentEvent(packageName, contentType, "USER_ACTION")
+                return true
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error blocking content with action: ${e.message}")
             return false
         }
     }
+    
+    /**
+     * Check if content type is short video content that should use smart blocking
+     */
+    private fun isShortVideoContent(contentType: String): Boolean {
+        return contentType in listOf(
+            AppSettings.CONTENT_TYPE_REELS,
+            AppSettings.CONTENT_TYPE_SHORTS,
+            AppSettings.CONTENT_TYPE_STORIES,
+            AppSettings.CONTENT_TYPE_SPOTLIGHT
+        )
+    }
 
     /**
-     * Execute blocking action based on user settings
+     * Execute blocking action based on content type and user settings.
+     * For short video content, always uses close_player to keep app open.
      */
     private fun executeBlockingAction(packageName: String, contentType: String) {
         try {
-            val blockingAction = appSettings.getBlockingAction()
+            // Get the effective blocking action (short videos always use close_player)
+            val blockingAction = appSettings.getEffectiveBlockingAction(contentType)
             Log.d(TAG, "Executing blocking action: $blockingAction for $packageName ($contentType)")
             
             if (::blockingActionHandler.isInitialized) {
@@ -787,29 +830,58 @@ class FocusAccessibilityService : AccessibilityService() {
                 else -> "blocked content"
             }
             
+            showUserFeedback(actionMessage, true)
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error executing blocking action: ${e.message}")
+            // Fallback to default action
+            performGlobalAction(GLOBAL_ACTION_BACK)
+        }
+    }
+    
+    /**
+     * Show user feedback with toast message, haptic feedback, and optional notification
+     */
+    private fun showUserFeedback(message: String, showNotification: Boolean) {
+        try {
+            // Haptic feedback
+            if (appSettings.isHapticFeedbackEnabled()) {
+                try {
+                    val vibrator = getSystemService(android.content.Context.VIBRATOR_SERVICE) as? android.os.Vibrator
+                    if (vibrator?.hasVibrator() == true) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            vibrator.vibrate(android.os.VibrationEffect.createOneShot(50, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+                        } else {
+                            @Suppress("DEPRECATION")
+                            vibrator.vibrate(50)
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error providing haptic feedback: ${e.message}")
+                }
+            }
+            
+            // Toast message
             try {
-                Toast.makeText(this, "Focus: $actionMessage", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Focus: $message", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Log.e(TAG, "Error showing toast: ${e.message}")
             }
             
-            // Show notification if enabled
-            if (::notificationHelper.isInitialized && appSettings.showBlockNotifications()) {
+            // Show notification if enabled and requested
+            if (showNotification && ::notificationHelper.isInitialized && appSettings.showBlockNotifications()) {
                 try {
                     notificationHelper.showTemporaryNotification(
                         "Focus: Content Blocked", 
-                        "Blocked $contentType - $actionMessage", 
+                        message, 
                         false
                     )
                 } catch (e: Exception) {
                     Log.e(TAG, "Error showing notification: ${e.message}")
                 }
             }
-            
         } catch (e: Exception) {
-            Log.e(TAG, "Error executing blocking action: ${e.message}")
-            // Fallback to default action
-            performGlobalAction(GLOBAL_ACTION_BACK)
+            Log.e(TAG, "Error in showUserFeedback: ${e.message}")
         }
     }
 
