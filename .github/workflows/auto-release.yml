@@ -3,7 +3,7 @@ name: Auto Release and APK Build
 on:
   push:
     branches:
-      - main
+      - app-main
     paths-ignore:
       - '**.md'
       - 'docs/**'
@@ -94,7 +94,7 @@ jobs:
         run: |
           echo "storeFile=$GITHUB_WORKSPACE/keystore.jks" > keystore.properties
           echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> keystore.properties
-          echo "keyAlias=focus" >> keystore.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> keystore.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
           
       - name: Build Release APK
