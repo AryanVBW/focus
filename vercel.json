@@ -1,0 +1,18 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "app-main": false
+    }
+  },
+  "github": {
+    "silent": true,
+    "autoAlias": true
+  },
+  "buildCommand": "cd Focus-site && npm install && npm run build",
+  "outputDirectory": "Focus-site/dist",
+  "installCommand": "cd Focus-site && npm install",
+  "framework": "vite",
+  "ignoreCommand": "bash -c 'if [ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]; then exit 1; else exit 0; fi'"
+}
+
