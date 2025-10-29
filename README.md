@@ -8,6 +8,18 @@
 
 <p align="center">Reclaim your attention by blocking digital distractions</p>
 
+<p align="center">
+  <a href="https://github.com/AryanVBW/focus/actions/workflows/auto-release.yml">
+    <img src="https://github.com/AryanVBW/focus/actions/workflows/auto-release.yml/badge.svg" alt="Auto Release"/>
+  </a>
+  <a href="https://github.com/AryanVBW/focus/actions/workflows/play-store-deploy.yml">
+    <img src="https://github.com/AryanVBW/focus/actions/workflows/play-store-deploy.yml/badge.svg" alt="Play Store Deploy"/>
+  </a>
+  <a href="https://github.com/AryanVBW/focus/releases">
+    <img src="https://img.shields.io/github/v/release/AryanVBW/focus" alt="Latest Release"/>
+  </a>
+</p>
+
 ---
 
 ## 🎯 What is Focus?
@@ -91,6 +103,8 @@ At Focus, we take your privacy seriously. The app:
 
 ## 💾 Installation & Setup
 
+### For Users
+
 1. **Download**: Get the APK from the [Releases](https://github.com/AryanVBW/focus/releases) page
 2. **Install**: Open the APK and follow installation prompts
 3. **Initial Setup**:
@@ -98,6 +112,15 @@ At Focus, we take your privacy seriously. The app:
    - Choose which apps to monitor
    - Configure blocking preferences
 4. **Customize**: Set up Focus Mode timers, notification preferences, and blocking levels
+
+### For Developers
+
+Focus uses automated CI/CD workflows for building and deploying:
+
+- **GitHub Releases**: Automatic APK builds on every push to `app-main` branch
+- **Google Play Console**: Automated deployment to internal/alpha/beta/production tracks
+
+See [Deployment Documentation](.github/DEPLOYMENT_QUICK_REFERENCE.md) for details.
 
 ## 💻 Technical Details
 

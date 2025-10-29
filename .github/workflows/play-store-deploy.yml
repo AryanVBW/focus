@@ -1,0 +1,283 @@
+name: Deploy to Google Play Console
+
+# Workflow triggers:
+# 1. Manual dispatch with track selection
+# 2. Push to specific branches for automatic deployment
+# 3. Tag creation for production releases
+on:
+  # Manual trigger with track selection
+  workflow_dispatch:
+    inputs:
+      track:
+        description: 'Release track (internal/alpha/beta/production)'
+        required: true
+        default: 'internal'
+        type: choice
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+      rollout_percentage:
+        description: 'Rollout percentage (1-100, only for production)'
+        required: false
+        default: '100'
+        type: string
+  
+  # Automatic deployment on push to specific branches
+  push:
+    branches:
+      - 'release/internal'    # Auto-deploy to internal testing
+      - 'release/alpha'        # Auto-deploy to alpha testing
+      - 'release/beta'         # Auto-deploy to beta testing
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
+  
+  # Production deployment on version tags
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'  # e.g., v2.0.4
+
+jobs:
+  # Job to determine the release track based on trigger
+  determine-track:
+    name: Determine Release Track
+    runs-on: ubuntu-latest
+    outputs:
+      track: ${{ steps.set-track.outputs.track }}
+      rollout: ${{ steps.set-track.outputs.rollout }}
+    
+    steps:
+      - name: Set release track
+        id: set-track
+        run: |
+          # Determine track based on trigger type
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Manual trigger - use selected track
+            echo "track=${{ github.event.inputs.track }}" >> $GITHUB_OUTPUT
+            echo "rollout=${{ github.event.inputs.rollout_percentage }}" >> $GITHUB_OUTPUT
+            echo "📱 Manual deployment to ${{ github.event.inputs.track }} track"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # Tag push - deploy to production
+            echo "track=production" >> $GITHUB_OUTPUT
+            echo "rollout=100" >> $GITHUB_OUTPUT
+            echo "🚀 Tag-based deployment to production track"
+          elif [[ "${{ github.ref }}" == *"release/internal"* ]]; then
+            echo "track=internal" >> $GITHUB_OUTPUT
+            echo "rollout=100" >> $GITHUB_OUTPUT
+            echo "🔧 Branch-based deployment to internal track"
+          elif [[ "${{ github.ref }}" == *"release/alpha"* ]]; then
+            echo "track=alpha" >> $GITHUB_OUTPUT
+            echo "rollout=100" >> $GITHUB_OUTPUT
+            echo "🧪 Branch-based deployment to alpha track"
+          elif [[ "${{ github.ref }}" == *"release/beta"* ]]; then
+            echo "track=beta" >> $GITHUB_OUTPUT
+            echo "rollout=100" >> $GITHUB_OUTPUT
+            echo "🎯 Branch-based deployment to beta track"
+          else
+            echo "track=internal" >> $GITHUB_OUTPUT
+            echo "rollout=100" >> $GITHUB_OUTPUT
+            echo "⚠️ Unknown trigger - defaulting to internal track"
+          fi
+
+  # Main build and deploy job
+  build-and-deploy:
+    name: Build and Deploy to Play Store
+    needs: determine-track
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for changelog generation
+      
+      # Step 2: Set up JDK 17 (required for Android builds)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle  # Cache Gradle dependencies for faster builds
+      
+      # Step 3: Grant execute permission to Gradle wrapper
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      # Step 4: Cache Gradle dependencies to speed up builds
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      # Step 5: Get current version information
+      - name: Get version information
+        id: version_info
+        run: |
+          VERSION_CODE=$(grep "versionCode" app/build.gradle | awk '{print $2}')
+          VERSION_NAME=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"')
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "📦 Building version: $VERSION_NAME (build $VERSION_CODE)"
+      
+      # Step 6: Decode and setup signing keystore
+      # The keystore is stored as a base64-encoded secret for security
+      - name: Decode signing keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "❌ Error: KEYSTORE_BASE64 secret is not set"
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > $GITHUB_WORKSPACE/keystore.jks
+          echo "✅ Keystore decoded successfully"
+      
+      # Step 7: Create keystore.properties file for Gradle
+      - name: Create keystore.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          # Validate that all required secrets are present
+          if [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then
+            echo "❌ Error: Missing required keystore secrets"
+            echo "Required: KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD"
+            exit 1
+          fi
+          
+          # Create keystore.properties file
+          cat > keystore.properties << EOF
+          storeFile=$GITHUB_WORKSPACE/keystore.jks
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+          echo "✅ Keystore properties configured"
+      
+      # Step 8: Build Android App Bundle (AAB) for Play Store
+      # AAB is the preferred format for Google Play Console
+      - name: Build Release AAB
+        run: |
+          echo "🔨 Building Android App Bundle..."
+          ./gradlew bundleRelease --stacktrace
+          echo "✅ AAB built successfully"
+      
+      # Step 9: Build APK as well (for backup/testing)
+      - name: Build Release APK
+        run: |
+          echo "🔨 Building APK..."
+          ./gradlew assembleRelease --stacktrace
+          echo "✅ APK built successfully"
+      
+      # Step 10: Verify build outputs exist
+      - name: Verify build outputs
+        id: verify_build
+        run: |
+          AAB_PATH="app/build/outputs/bundle/release/app-release.aab"
+          APK_PATH="app/build/outputs/apk/release/app-release.apk"
+          
+          if [ ! -f "$AAB_PATH" ]; then
+            echo "❌ Error: AAB file not found at $AAB_PATH"
+            exit 1
+          fi
+          
+          if [ ! -f "$APK_PATH" ]; then
+            echo "❌ Error: APK file not found at $APK_PATH"
+            exit 1
+          fi
+          
+          # Get file sizes
+          AAB_SIZE=$(du -h "$AAB_PATH" | cut -f1)
+          APK_SIZE=$(du -h "$APK_PATH" | cut -f1)
+          
+          echo "aab_path=$AAB_PATH" >> $GITHUB_OUTPUT
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "aab_size=$AAB_SIZE" >> $GITHUB_OUTPUT
+          echo "apk_size=$APK_SIZE" >> $GITHUB_OUTPUT
+          
+          echo "✅ Build verification complete"
+          echo "   AAB: $AAB_SIZE"
+          echo "   APK: $APK_SIZE"
+      
+      # Step 11: Deploy to Google Play Console
+      # Using the official Google Play upload action
+      # The service account JSON is passed directly from secrets (more secure than creating a file)
+      - name: Deploy to Google Play Console
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          packageName: com.aryanvbw.focus
+          releaseFiles: ${{ steps.verify_build.outputs.aab_path }}
+          track: ${{ needs.determine-track.outputs.track }}
+          status: completed
+          inAppUpdatePriority: 2
+          userFraction: ${{ needs.determine-track.outputs.rollout != '100' && (needs.determine-track.outputs.rollout / 100.0) || '' }}
+          whatsNewDirectory: .github/whatsnew  # Optional: Release notes directory
+          mappingFile: app/build/outputs/mapping/release/mapping.txt  # ProGuard mapping file
+      
+      # Step 12: Upload artifacts for record keeping
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Focus-v${{ steps.version_info.outputs.version_name }}-${{ needs.determine-track.outputs.track }}.aab
+          path: ${{ steps.verify_build.outputs.aab_path }}
+          retention-days: 90
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Focus-v${{ steps.version_info.outputs.version_name }}-${{ needs.determine-track.outputs.track }}.apk
+          path: ${{ steps.verify_build.outputs.apk_path }}
+          retention-days: 90
+
+      # Step 13: Upload ProGuard mapping file (if it exists)
+      # This is crucial for debugging crash reports
+      - name: Upload ProGuard mapping
+        uses: actions/upload-artifact@v4
+        if: hashFiles('app/build/outputs/mapping/release/mapping.txt') != ''
+        with:
+          name: mapping-v${{ steps.version_info.outputs.version_name }}
+          path: app/build/outputs/mapping/release/mapping.txt
+          retention-days: 365  # Keep mapping files longer for crash analysis
+
+      # Step 14: Clean up sensitive files
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f keystore.jks
+          rm -f keystore.properties
+          echo "🧹 Cleanup complete"
+
+      # Step 15: Create deployment summary
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "## 🎉 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** v${{ steps.version_info.outputs.version_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Build:** ${{ steps.version_info.outputs.version_code }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Track:** ${{ needs.determine-track.outputs.track }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Rollout:** ${{ needs.determine-track.outputs.rollout }}%" >> $GITHUB_STEP_SUMMARY
+          echo "**AAB Size:** ${{ steps.verify_build.outputs.aab_size }}" >> $GITHUB_STEP_SUMMARY
+          echo "**APK Size:** ${{ steps.verify_build.outputs.apk_size }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Successfully deployed to Google Play Console!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📱 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Check the [Google Play Console](https://play.google.com/console) for the new release" >> $GITHUB_STEP_SUMMARY
+          echo "2. Review and approve the release if needed" >> $GITHUB_STEP_SUMMARY
+          echo "3. Monitor crash reports and user feedback" >> $GITHUB_STEP_SUMMARY
+
