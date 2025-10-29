@@ -24,22 +24,19 @@ on:
         default: '100'
         type: string
   
-  # Automatic deployment on push to specific branches
+  # Automatic deployment on push to specific branches or tags
   push:
     branches:
       - 'release/internal'    # Auto-deploy to internal testing
       - 'release/alpha'        # Auto-deploy to alpha testing
       - 'release/beta'         # Auto-deploy to beta testing
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'  # e.g., v2.0.4 - Production deployment
     paths-ignore:
       - '**.md'
       - 'docs/**'
       - '.gitignore'
       - 'LICENSE'
-  
-  # Production deployment on version tags
-  push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'  # e.g., v2.0.4
 
 jobs:
   # Job to determine the release track based on trigger
