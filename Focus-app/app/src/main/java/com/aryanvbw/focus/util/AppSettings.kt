@@ -3,6 +3,7 @@ package com.aryanvbw.focus.util
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 
 /**
  * Handles app settings and user preferences
@@ -85,6 +86,12 @@ class AppSettings(private val context: Context) {
         // Onboarding preferences
         const val KEY_FIRST_TIME_USER = "first_time_user"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
+
+        // Theme preferences
+        const val KEY_CURRENT_THEME = "current_theme"
+        const val THEME_SYSTEM = 0
+        const val THEME_LIGHT = 1
+        const val THEME_DARK = -1
     }
     
     /**
@@ -618,5 +625,19 @@ class AppSettings(private val context: Context) {
     
     fun setOnboardingCompleted(completed: Boolean) {
         prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETED, completed).apply()
+    }
+
+    /*
+     * Store theme preferences
+     * 0: Follow System
+     * 1: Light
+     * -1: Dark
+     */
+    fun getTheme(): Int {
+        return prefs.getInt(KEY_CURRENT_THEME, 0)
+    }
+
+    fun setTheme(theme: Int) {
+        prefs.edit { putInt(KEY_CURRENT_THEME, theme) }
     }
 }

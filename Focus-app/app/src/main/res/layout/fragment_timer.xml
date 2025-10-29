@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
+    android:background="@color/background"
     tools:context=".ui.timer.TimerFragment">
 
     <!-- Header with Settings Icon -->
@@ -15,7 +15,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:src="@drawable/ic_settings"
-        app:tint="@color/white"
+        app:tint="@color/on_surface"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="FOCUS"
-        android:textColor="@color/white"
+        android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:textStyle="bold"
         android:fontFamily="@font/poppins"
@@ -53,7 +53,7 @@
             android:layout_marginEnd="8dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface">
+            app:cardBackgroundColor="@color/surface_variant">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hours Focused"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="10sp"
                     android:alpha="0.7"
                     android:fontFamily="@font/poppins" />
@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3.5"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:fontFamily="@font/poppins" />
@@ -94,7 +94,7 @@
             android:layout_marginHorizontal="4dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface">
+            app:cardBackgroundColor="@color/surface_variant">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sessions\nCompleted"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="10sp"
                     android:alpha="0.7"
                     android:textAlignment="center"
@@ -118,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:fontFamily="@font/poppins" />
@@ -135,7 +135,7 @@
             android:layout_marginStart="8dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface">
+            app:cardBackgroundColor="@color/surface_variant">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -148,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Distractions\nBlocked"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="10sp"
                     android:alpha="0.7"
                     android:textAlignment="center"
@@ -159,7 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:fontFamily="@font/poppins" />
@@ -195,7 +195,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="48sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins" />
@@ -204,7 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hours"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:alpha="0.7"
                 android:fontFamily="@font/poppins" />
@@ -224,7 +224,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="48sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins" />
@@ -233,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Minutes"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:alpha="0.7"
                 android:fontFamily="@font/poppins" />
@@ -252,7 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="48sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/poppins" />
@@ -261,7 +261,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Seconds"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:alpha="0.7"
                 android:fontFamily="@font/poppins" />
@@ -311,14 +311,14 @@
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="28dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface">
+            app:cardBackgroundColor="@color/surface_variant">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Block Distractions"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:fontFamily="@font/poppins" />
 
@@ -331,14 +331,14 @@
             android:layout_height="56dp"
             app:cardCornerRadius="28dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/dark_surface">
+            app:cardBackgroundColor="@color/surface_variant">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="View Progress"
-                android:textColor="@color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:fontFamily="@font/poppins" />
 

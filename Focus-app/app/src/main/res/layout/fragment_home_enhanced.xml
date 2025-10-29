@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@drawable/dashboard_background"
+    android:background="@color/background"
     tools:context=".ui.home.HomeFragment">
 
 <androidx.constraintlayout.widget.ConstraintLayout 
@@ -79,7 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Good morning!"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/black"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         android:fontFamily="@font/poppins"
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Ready to focus today?"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:fontFamily="@font/poppins"
                         android:alpha="0.8" />
@@ -108,7 +108,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Daily Goal:"
-                            android:textColor="@color/text_tertiary"
+                            android:textColor="@color/black"
                             android:textSize="12sp"
                             android:fontFamily="@font/poppins" />
 
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="@android:color/white">
+                    app:cardBackgroundColor="@color/surface_variant">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -183,7 +183,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@color/surface_variant">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -359,7 +359,7 @@
             android:layout_marginEnd="12dp"
             app:cardCornerRadius="24dp"
             app:cardElevation="12dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/card_blocked_count"
             app:layout_constraintTop_toTopOf="parent">
@@ -378,7 +378,7 @@
                     android:layout_height="48dp"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="@android:color/white">
+                    app:cardBackgroundColor="@color/surface_variant">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -422,7 +422,7 @@
             android:layout_marginStart="12dp"
             app:cardCornerRadius="24dp"
             app:cardElevation="12dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintStart_toEndOf="@id/card_focus_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -441,7 +441,7 @@
                     android:layout_height="48dp"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="@android:color/white">
+                    app:cardBackgroundColor="@color/surface_variant">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -485,7 +485,7 @@
             android:layout_marginTop="24dp"
             app:cardCornerRadius="24dp"
             app:cardElevation="12dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintTop_toBottomOf="@id/card_focus_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -516,7 +516,7 @@
                             android:layout_height="40dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="4dp"
-                            app:cardBackgroundColor="@android:color/white">
+                            app:cardBackgroundColor="@color/surface_variant">
 
                             <ImageView
                                 android:layout_width="20dp"
@@ -626,7 +626,7 @@
                 android:layout_marginEnd="16dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/surface_variant"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -679,7 +679,7 @@
                 android:layout_marginEnd="16dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/surface_variant"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -732,7 +732,7 @@
                 android:layout_marginEnd="16dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/surface_variant"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -784,7 +784,7 @@
                 android:layout_height="120dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/surface_variant"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -865,7 +865,7 @@
             android:layout_marginBottom="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/card_app_limits"
             app:layout_constraintTop_toTopOf="parent"
@@ -929,7 +929,7 @@
             android:layout_marginBottom="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintStart_toEndOf="@id/card_usage_analytics"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -993,7 +993,7 @@
             android:layout_marginEnd="12dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/card_smart_insights"
             app:layout_constraintTop_toBottomOf="@id/card_usage_analytics"
@@ -1056,7 +1056,7 @@
             android:layout_marginStart="12dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/surface_variant"
             app:layout_constraintStart_toEndOf="@id/card_content_blocking"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_app_limits"
@@ -1123,7 +1123,7 @@
         android:layout_marginBottom="32dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="12dp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/surface_variant"
         app:layout_constraintTop_toBottomOf="@id/layout_features_grid"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -1152,7 +1152,7 @@
                     android:layout_height="56dp"
                     app:cardCornerRadius="28dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="@android:color/white"
+                    app:cardBackgroundColor="@color/surface_variant"
                     android:alpha="0.3">
                 </androidx.cardview.widget.CardView>
 
@@ -1162,7 +1162,7 @@
                     android:layout_gravity="center"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="6dp"
-                    app:cardBackgroundColor="@android:color/white">
+                    app:cardBackgroundColor="@color/surface_variant">
 
                     <ImageView
                         android:id="@+id/image_mode_status"
@@ -1236,7 +1236,7 @@
                 android:layout_height="32dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@color/surface_variant">
 
                 <ImageView
                     android:layout_width="16dp"
