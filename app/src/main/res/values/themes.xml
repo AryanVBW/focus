@@ -69,4 +69,67 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
+
+    <!-- Material Design 3 Button Styles for Onboarding -->
+    <style name="OnboardingButton.Primary" parent="Widget.Material3.Button">
+        <item name="android:layout_height">56dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="cornerRadius">28dp</item>
+        <item name="elevation">6dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="rippleColor">@color/primary_light</item>
+    </style>
+
+    <style name="OnboardingButton.Secondary" parent="Widget.Material3.Button.TextButton">
+        <item name="android:layout_height">56dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textColor">@color/white_alpha_80</item>
+        <item name="rippleColor">@color/white_alpha_30</item>
+        <item name="android:minWidth">88dp</item>
+    </style>
+
+    <style name="OnboardingButton.GetStarted" parent="OnboardingButton.Primary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="iconGravity">end</item>
+        <item name="icon">@drawable/ic_arrow_forward</item>
+        <item name="iconTint">@color/primary</item>
+    </style>
+
+    <!-- Enhanced Progress Bar Style -->
+    <style name="OnboardingProgressBar" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="android:layout_height">6dp</item>
+        <item name="trackCornerRadius">8dp</item>
+        <item name="indicatorColor">@color/white</item>
+        <item name="trackColor">@color/white_alpha_30</item>
+    </style>
+
+    <!-- Material Design 3 Text Styles -->
+    <style name="OnboardingText.Title" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="fontFamily">@font/inter_bold</item>
+    </style>
+
+    <style name="OnboardingText.Subtitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/white_alpha_80</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="fontFamily">@font/inter_medium</item>
+    </style>
+
+    <style name="OnboardingText.Description" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textColor">@color/white_alpha_70</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.005</item>
+        <item name="android:lineSpacingExtra">6dp</item>
+        <item name="fontFamily">@font/inter_regular</item>
+    </style>
 </resources>

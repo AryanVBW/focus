@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Selected state - Active dot -->
     <item android:state_selected="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#4FACFE" />
-            <corners android:radius="2dp" />
+        <shape android:shape="oval">
+            <size android:width="12dp" android:height="12dp" />
+            <solid android:color="@color/white" />
+            <stroke android:width="2dp" android:color="@color/white_alpha_30" />
         </shape>
     </item>
+
+    <!-- Unselected state - Inactive dot -->
     <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
-            <corners android:radius="2dp" />
+        <shape android:shape="oval">
+            <size android:width="8dp" android:height="8dp" />
+            <solid android:color="@color/white_alpha_30" />
         </shape>
     </item>
 </selector>

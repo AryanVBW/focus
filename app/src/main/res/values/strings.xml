@@ -2,7 +2,19 @@
 <resources>
     <string name="app_name">Focus</string>
     <string name="app_tagline">Your time is only yours</string>
-    
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get Started</string>
+    <string name="onboarding_illustration">Onboarding illustration</string>
+    <string name="onboarding_progress_description">Onboarding progress indicator</string>
+    <string name="onboarding_page_indicator_description">Page indicator showing current onboarding step</string>
+    <string name="onboarding_skip_description">Skip onboarding and go to main app</string>
+    <string name="onboarding_next_description">Continue to next onboarding step</string>
+    <string name="onboarding_get_started_description">Complete onboarding and start using Focus</string>
+    <string name="onboarding_title_description">Onboarding screen title</string>
+
     <!-- Accessibility Service -->
     <string name="accessibility_service_description">Focus needs accessibility permission to detect and block distracting content like reels, stories, and short videos. No personal data is collected.</string>
     <string name="accessibility_service_label">Focus Blocker</string>
