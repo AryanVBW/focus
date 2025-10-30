@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Base layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="45"
+                android:startColor="#667EEA"
+                android:centerColor="#764BA2"
+                android:endColor="#F093FB"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Overlay layer with transparency for blending -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#334FACFE"
+                android:centerColor="#3300F2FE"
+                android:endColor="#3343E97B"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Third layer for more complexity -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="225"
+                android:startColor="#22FA709A"
+                android:centerColor="#22FEE140"
+                android:endColor="#22FA8BFF"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+</layer-list>

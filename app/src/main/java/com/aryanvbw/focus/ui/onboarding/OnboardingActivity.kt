@@ -2,6 +2,7 @@ package com.aryanvbw.focus.ui.onboarding
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.aryanvbw.focus.R
 import com.aryanvbw.focus.databinding.ActivityOnboardingBinding
 import com.aryanvbw.focus.ui.MainActivity
+import com.aryanvbw.focus.ui.components.ColorBendsBackgroundView
 import com.aryanvbw.focus.util.AppSettings
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -20,6 +22,7 @@ class OnboardingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOnboardingBinding
     private lateinit var settings: AppSettings
     private lateinit var onboardingAdapter: OnboardingPagerAdapter
+    private lateinit var colorBendsBackground: ColorBendsBackgroundView
     
     private val onboardingPages = listOf(
         OnboardingPage(
@@ -59,7 +62,9 @@ class OnboardingActivity : AppCompatActivity() {
         setContentView(binding.root)
         
         settings = AppSettings(this)
-        
+
+        // Initialize color bends background
+        colorBendsBackground = binding.colorBendsBackground
         setupViewPager()
         setupClickListeners()
         setupInitialState()
@@ -126,14 +131,33 @@ class OnboardingActivity : AppCompatActivity() {
             binding.btnSkip.visibility = View.VISIBLE
             binding.btnGetStarted.visibility = View.GONE
         }
-        
-        // Update background color with smooth transition
-        val backgroundColor = ContextCompat.getColor(this, onboardingPages[position].backgroundColor)
-        binding.root.setBackgroundColor(backgroundColor)
-        
-        // Update progress indicator
-        val progress = ((position + 1).toFloat() / onboardingPages.size.toFloat()) * 100
-        binding.progressIndicator.progress = progress.toInt()
+
+        // Color-bends background is already animated, no need for manual color changes
+        // The animated background provides a continuous flowing effect
+
+        // Update progress indicator with smooth animation
+        val newProgress = ((position + 1).toFloat() / onboardingPages.size.toFloat()) * 100
+        val currentProgress = binding.progressIndicator.progress
+        val progressAnimator = ObjectAnimator.ofInt(binding.progressIndicator, "progress", currentProgress, newProgress.toInt())
+        progressAnimator.duration = 300
+        progressAnimator.start()
+    }
+
+    private fun animateButtonVisibility(button: View, show: Boolean) {
+        if (show && button.visibility != View.VISIBLE) {
+            button.visibility = View.VISIBLE
+            button.alpha = 0f
+            button.animate()
+                .alpha(1f)
+                .setDuration(200)
+                .start()
+        } else if (!show && button.visibility == View.VISIBLE) {
+            button.animate()
+                .alpha(0f)
+                .setDuration(200)
+                .withEndAction { button.visibility = View.GONE }
+                .start()
+        }
     }
     
     private fun animatePageTransition() {
@@ -176,6 +200,46 @@ class OnboardingActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun showExitConfirmation() {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("Exit Setup?")
+            .setMessage("You can complete the setup anytime from the app settings.")
+            .setPositiveButton("Exit") { _, _ ->
+                // Mark as skipped and exit
+                settings.setOnboardingCompleted(true)
+                settings.setFirstTimeUser(false)
+                super.onBackPressed()
+            }
+            .setNegativeButton("Continue Setup") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Resume color-bends background animation
+        colorBendsBackground.resumeAnimation()
+        // Resume any paused animations
+        // This would be implemented if using the enhanced adapter with Lottie
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Pause color-bends background animation to save battery
+        colorBendsBackground.pauseAnimation()
+        // Pause animations to save battery and resources
+        // This would be implemented if using the enhanced adapter with Lottie
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Stop color-bends background animation
+        colorBendsBackground.stopAnimation()
+        // Clean up resources
+        binding.viewPager.adapter = null
     }
 }
 
