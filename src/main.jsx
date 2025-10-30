@@ -6,6 +6,7 @@ import './css/animations.css';
 import App from './App';
 import { ThemeProvider } from './context/ThemeContext';
 
+
 // Import AOS for scroll animations
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -19,4 +20,10 @@ AOS.init({
   delay: 100,
 });
 
-ReactDOM.createRoot(document.getElementById('root')).render(_jsx(React.StrictMode, { children: _jsx(ThemeProvider, { children: _jsx(App, {}) }) }));
+ReactDOM.createRoot(document.getElementById('root')).render(
+  _jsx(React.StrictMode, {
+    children: _jsx(ThemeProvider, {
+      children: _jsx(App, {})
+    })
+  })
+);

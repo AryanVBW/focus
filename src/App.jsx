@@ -10,6 +10,7 @@ import PrivacySection from './components/PrivacySection';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import AppOverview from './components/AppOverview';
+import DocumentationRouter from './components/DocumentationRouter';
 import DownloadSection from './components/DownloadSection';
 import Footer from './components/Footer';
 import AnimatedBackground from './components/AnimatedBackground';
@@ -46,7 +47,8 @@ function App() {
                     'home': 'Focus - Regain control of your digital life',
                     'privacy-policy': 'Privacy Policy',
                     'terms-of-service': 'Terms of Service',
-                    'app-overview': 'App Overview'
+                    'app-overview': 'App Overview',
+                    'documentation': 'Focus Documentation'
                 };
                 
                 ariaHelpers.setPageTitle(pageTitles[page] || 'Focus App');
@@ -59,7 +61,8 @@ function App() {
                     'home': 'Home page',
                     'privacy-policy': 'Privacy Policy page',
                     'terms-of-service': 'Terms of Service page',
-                    'app-overview': 'App Overview page'
+                    'app-overview': 'App Overview page',
+                    'documentation': 'Documentation page'
                 };
                 
                 setTimeout(() => {
@@ -82,6 +85,7 @@ function App() {
                 if (hash === 'privacy-policy') setCurrentPage('privacy-policy');
                 else if (hash === 'terms-of-service') setCurrentPage('terms-of-service');
                 else if (hash === 'app-overview') setCurrentPage('app-overview');
+                else if (hash.startsWith('documentation')) setCurrentPage('documentation');
                 else if (hash === '') setCurrentPage('home');
                 
                 // Update URL when page changes
@@ -90,6 +94,7 @@ function App() {
                     if (hash === 'privacy-policy') setCurrentPage('privacy-policy');
                     else if (hash === 'terms-of-service') setCurrentPage('terms-of-service');
                     else if (hash === 'app-overview') setCurrentPage('app-overview');
+                    else if (hash.startsWith('documentation')) setCurrentPage('documentation');
                     else if (hash === '') setCurrentPage('home');
                 };
                 
@@ -100,8 +105,9 @@ function App() {
                     'privacy-policy': 'Privacy Policy',
                     'terms-of-service': 'Terms of Service',
                     'app-overview': 'App Overview',
+                    'documentation': 'Focus Documentation',
                     'home': 'Focus - Regain control of your digital life'
-                }[hash || 'home'];
+                }[hash.startsWith('documentation') ? 'documentation' : (hash || 'home')];
                 
                 ariaHelpers.setPageTitle(initialTitle);
                 
@@ -216,6 +222,14 @@ function App() {
                             <AppOverview />
                         </main>
                         <Footer navigateTo={navigateTo} />
+                    </div>
+                );
+            case 'documentation':
+                return (
+                    <div className="min-h-screen">
+                        <main id="main-content" role="main">
+                            <DocumentationRouter />
+                        </main>
                     </div>
                 );
             default:
